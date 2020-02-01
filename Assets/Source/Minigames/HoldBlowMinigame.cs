@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Minigame1Controller : GameEndController
+public class HoldBlowMinigame : GameEndController
 {
 
     public float blowHoldingTime = 5.0f;

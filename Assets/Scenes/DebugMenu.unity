@@ -254,7 +254,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Boat
+  m_Text: Balloon
 --- !u!222 &54185726
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -331,7 +331,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Baloon
+  m_Text: Bomb
 --- !u!222 &62523603
 CanvasRenderer:
   m_ObjectHideFlags: 0

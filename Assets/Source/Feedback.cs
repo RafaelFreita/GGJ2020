@@ -23,6 +23,6 @@ public class Feedback : MonoBehaviour
 
 	public void OnGameEnd(bool state)
 	{
-		feedbackText.text = state ? "You win" : "You Loose";
+		feedbackText.text = state ? "You win" : "You Lose";
 	}
 }
