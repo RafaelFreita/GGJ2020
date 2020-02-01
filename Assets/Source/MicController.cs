@@ -32,33 +32,38 @@ public class MicController : MonoBehaviour
 	// The alpha for the low pass filter (I don't really understand this).
 	public float Alpha = 0.05f;
 
-	public bool _calibration = false;
-	public bool Calibration
+	public bool calibratingAmbient = false;
+	public bool CalibratingAmbient
 	{
-		get { return _calibration; }
-		set { _calibration = value; }
+		get { return calibratingAmbient; }
+		set { calibratingAmbient = value; }
 	}
-	public int CalibrationLen = 0;
-	public int CalibrationMarginAmount = 4;
+	public int CalAmbientLen = 0;
+	public float CalAmbientStdDev = 3;
+	public float CalAmbientLoudness = -30;
 	[SerializeField]
-	private Text ThresholdText;
-	public void SetCalibrationMarginAmount(float slider)
+	private Text CalAmbientText;
+
+	public bool calibratingBlow = false;
+	public bool CalibratingBlow
 	{
-		CalibrationMarginAmount = (int)slider;
-		if (ThresholdText != null)
-		{
-			ThresholdText.text = "Threshold: " + CalibrationMarginAmount;
-		}
+		get { return calibratingBlow; }
+		set { calibratingBlow = value; }
 	}
+	public int CalBlowLen = 0;
+	public float CalBlowStdDev = 0;
+	public float CalBlowLoudness = 0;
+	[SerializeField]
+	private Text CalBlowText;
 
 	/// How long a blow must last to be classified as a blow (and not a sigh for instance). (in seconds)
 	public float RequiredTimeToStartBlowing = 0.25f;
 	/// How long a blow must not be indentify to consider that the blow has actually stopped (in seconds)
 	public float RequiredTimeToStopBlowing = 0.25f;
-	public float LowPassFilterThreshold = -30;
+	public float BlowLoudnessThreshold = -30;
 	[SerializeField]
-	private Text LowPassStdDevText;
-	public float LowPassStdDevThreshold = 3;
+	private Text BlowLoudnessStdDevText;
+	public float BlowLoudnessStdDevThreshold = 3;
 
 	private float[] _samples;           // Samples
 	private float[] _spectrum;          // Spectrum
@@ -212,7 +217,9 @@ public class MicController : MonoBehaviour
 		}
 
 		// Decides whether this instance of the result could be a blow or not.
-		if (_lowPassResults - LowPassFilterThreshold > CalibrationMarginAmount * LowPassStdDevThreshold/* && avgPitch == 0*/)
+		float ambientLoudnessDiff = _lowPassResults - CalAmbientLoudness;
+		float blowLoudnessDiff = _lowPassResults - CalBlowLoudness;
+		if (blowLoudnessDiff > CalBlowStdDev && ambientLoudnessDiff > CalAmbientStdDev * 3.0f)
 		{
 			_notBlowingTime = 0;
 			_blowingTime += Time.deltaTime;
@@ -252,37 +259,72 @@ public class MicController : MonoBehaviour
 			record.RemoveAt(0);
 		}
 		record.Add(val);
-		if (!_calibration) return;
-		if (CalibrationLen < RecordedLength)
+		if (calibratingAmbient)
 		{
-			CalibrationLen++;
+			if (CalAmbientLen < RecordedLength)
+			{
+				CalAmbientLen++;
+			}
+			else
+			{
+				float mean = 0;
+				foreach (float db in record)
+				{
+					mean += db;
+				}
+				mean /= record.Count;
+
+				float stddev = 0;
+				foreach (float db in record)
+				{
+					stddev += Mathf.Pow(db - mean, 2.0f);
+				}
+				stddev /= record.Count;
+				stddev = Mathf.Sqrt(stddev);
+				BlowLoudnessStdDevThreshold = stddev;
+				if (BlowLoudnessStdDevText != null)
+				{
+					BlowLoudnessStdDevText.text = "StdDev: " + stddev.ToString("F2");
+				}
+				BlowLoudnessThreshold = mean;
+				Debug.Log($"Div={stddev}");
+
+				calibratingAmbient = false;
+				CalAmbientLen = 0;
+			}
 		}
-		else
+
+		if (calibratingBlow)
 		{
-			float mean = 0;
-			foreach (float db in record)
+			if (CalBlowLen < RecordedLength)
 			{
-				mean += db;
+				CalBlowLen++;
 			}
-			mean /= record.Count;
+			else
+			{
+				float mean = 0;
+				foreach (float db in record)
+				{
+					mean += db;
+				}
+				mean /= record.Count;
 
-			float stddev = 0;
-			foreach (float db in record)
-			{
-				stddev += Mathf.Pow(db - mean, 2.0f);
-			}
-			stddev /= record.Count;
-			stddev = Mathf.Sqrt(stddev);
-			LowPassStdDevThreshold = stddev;
-			if (LowPassStdDevText != null)
-			{
-				LowPassStdDevText.text = "StdDev: " + stddev.ToString("F2");
-			}
-			LowPassFilterThreshold = mean;
-			Debug.Log($"Div={stddev}");
+				float stddev = 0;
+				foreach (float db in record)
+				{
+					stddev += Mathf.Pow(db - mean, 2.0f);
+				}
+				stddev /= record.Count;
+				stddev = Mathf.Sqrt(stddev);
+				if (CalBlowText != null)
+				{
+					CalBlowText.text = $"BlowStdDev: {stddev.ToString("F2")}\n" +
+											 $"BlowLoudness: {mean.ToString("F2")}";
+				}
 
-			_calibration = false;
-			CalibrationLen = 0;
+				calibratingBlow = false;
+				CalBlowLen = 0;
+			}
 		}
 	}
 
