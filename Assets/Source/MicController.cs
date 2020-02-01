@@ -60,10 +60,6 @@ public class MicController : MonoBehaviour
 	public float RequiredTimeToStartBlowing = 0.25f;
 	/// How long a blow must not be indentify to consider that the blow has actually stopped (in seconds)
 	public float RequiredTimeToStopBlowing = 0.25f;
-	public float BlowLoudnessThreshold = -30;
-	[SerializeField]
-	private Text BlowLoudnessStdDevText;
-	public float BlowLoudnessStdDevThreshold = 3;
 
 	private float[] _samples;           // Samples
 	private float[] _spectrum;          // Spectrum
@@ -281,14 +277,13 @@ public class MicController : MonoBehaviour
 				}
 				stddev /= record.Count;
 				stddev = Mathf.Sqrt(stddev);
-				BlowLoudnessStdDevThreshold = stddev;
-				if (BlowLoudnessStdDevText != null)
+				CalAmbientStdDev = stddev;
+				CalAmbientLoudness = mean;
+				if (CalAmbientText != null)
 				{
-					BlowLoudnessStdDevText.text = "StdDev: " + stddev.ToString("F2");
+					CalAmbientText.text = $"AmbientStdDev: {CalAmbientStdDev.ToString("F2")}\n" +
+										$"AmbientLoudness: {CalAmbientLoudness.ToString("F2")}";
 				}
-				BlowLoudnessThreshold = mean;
-				Debug.Log($"Div={stddev}");
-
 				calibratingAmbient = false;
 				CalAmbientLen = 0;
 			}
@@ -316,12 +311,13 @@ public class MicController : MonoBehaviour
 				}
 				stddev /= record.Count;
 				stddev = Mathf.Sqrt(stddev);
+				CalBlowStdDev = stddev;
+				CalBlowLoudness = mean;
 				if (CalBlowText != null)
 				{
-					CalBlowText.text = $"BlowStdDev: {stddev.ToString("F2")}\n" +
-											 $"BlowLoudness: {mean.ToString("F2")}";
+					CalBlowText.text = $"BlowStdDev: {CalBlowStdDev.ToString("F2")}\n" +
+					                   $"BlowLoudness: {CalBlowLoudness.ToString("F2")}";
 				}
-
 				calibratingBlow = false;
 				CalBlowLen = 0;
 			}
