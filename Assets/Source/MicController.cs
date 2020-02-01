@@ -33,7 +33,7 @@ public class MicController : MonoBehaviour
 	private float lowPassResults;      // Low Pass Filter result
 	private float peakPowerForChannel; //
 
-	private AudioSource audio;
+	new private AudioSource audio;
 
 	public void Awake()
 	{
@@ -131,7 +131,7 @@ public class MicController : MonoBehaviour
 			}
 		}
 
-		Debug.Log($"Loudest frequency {loudestFrequency}, Loudest sample {loudestSample}");
+		//Debug.Log($"Loudest frequency {loudestFrequency}, Loudest sample {loudestSample}");
 
 		// Pass the index to a float variable
 		float interpolatedSample = loudestSample;
