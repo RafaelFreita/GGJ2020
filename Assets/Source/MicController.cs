@@ -54,7 +54,7 @@ public class MicController : MonoBehaviour
 	public float CalBlowStdDev = 0;
 	public float CalBlowLoudness = 0;
 	[SerializeField]
-	private Text CalBlowText;
+	private Text CalBlowText = null;
 
 	/// How long a blow must last to be classified as a blow (and not a sigh for instance). (in seconds)
 	public float RequiredTimeToStartBlowing = 0.25f;
