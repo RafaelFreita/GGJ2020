@@ -73,6 +73,8 @@ public class BaloonMinigame : GameEndController
         {
             balloonsFilled++;
             textBalloonsFilled.text = balloonsFilled.ToString();
+            currentBlowingTime = 0.0f;
+
             // Check if all balloons were filled
             if (balloonsFilled >= balloonsToFill)
             {
