@@ -192,8 +192,10 @@ public class MicController : MonoBehaviour
 		// Run our low pass filter.
 		_lowPassResults = LowPassFilter(_dbValue);
 
-
-		resultDisplay.text += $" lowPassResult: {_lowPassResults} \n";
+        if (resultDisplay)
+        {
+            resultDisplay.text += $" lowPassResult: {_lowPassResults} \n";
+        }
 
 		// Decides whether this instance of the result could be a blow or not.
 		if (_lowPassResults > LowPassfilterSomething/* && avgPitch == 0*/)
