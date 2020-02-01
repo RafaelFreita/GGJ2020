@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,12 +32,20 @@ public class MicController : MonoBehaviour
 	// The alpha for the low pass filter (I don't really understand this).
 	public float Alpha = 0.05f;
 
+	public bool _calibration = false;
+	public bool Calibration
+	{
+		get { return _calibration; }
+		set { _calibration = value; }
+	}
+	public int CalibrationLen = 0;
 
 	/// How long a blow must last to be classified as a blow (and not a sigh for instance). (in seconds)
 	public float RequiredTimeToStartBlowing = 0.25f;
 	/// How long a blow must not be indentify to consider that the blow has actually stopped (in seconds)
 	public float RequiredTimeToStopBlowing = 0.25f;
-	public float LowPassfilterSomething = -30;
+	public float LowPassFilterThreshold = -30;
+	public float LowPassStdDevThreshold = 3;
 
 	private float[] _samples;           // Samples
 	private float[] _spectrum;          // Spectrum
@@ -140,14 +149,6 @@ public class MicController : MonoBehaviour
 		float loudestFrequency = 0;
 		int loudestSample = 0;
 
-		for (int i = 1; i < _spectrum.Length - 1; i++)
-		{
-			Debug.DrawLine(new Vector3(i - 1, _spectrum[i] + 10, 0), new Vector3(i, _spectrum[i + 1] + 10, 0), Color.red);
-			Debug.DrawLine(new Vector3(i - 1, Mathf.Log(_spectrum[i - 1]) + 10, 2), new Vector3(i, Mathf.Log(_spectrum[i]) + 10, 2), Color.cyan);
-			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), _spectrum[i - 1] - 10, 1), new Vector3(Mathf.Log(i), _spectrum[i] - 10, 1), Color.green);
-			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), Mathf.Log(_spectrum[i - 1]), 3), new Vector3(Mathf.Log(i), Mathf.Log(_spectrum[i]), 3), Color.blue);
-		}
-
 		// Find the highest sample.
 		for (int i = 0; i < SampleCount; i++)
 		{
@@ -198,7 +199,7 @@ public class MicController : MonoBehaviour
         }
 
 		// Decides whether this instance of the result could be a blow or not.
-		if (_lowPassResults > LowPassfilterSomething/* && avgPitch == 0*/)
+		if (_lowPassResults - LowPassFilterThreshold > 3 * LowPassStdDevThreshold/* && avgPitch == 0*/)
 		{
 			_notBlowingTime = 0;
 			_blowingTime += Time.deltaTime;
@@ -238,6 +239,34 @@ public class MicController : MonoBehaviour
 			record.RemoveAt(0);
 		}
 		record.Add(val);
+		if(!_calibration) return;
+		if (CalibrationLen < RecordedLength)
+		{
+			CalibrationLen++;
+		}
+		else
+		{
+			float mean = 0;
+			foreach (float db in record)
+			{
+				mean += db;
+			}
+			mean /= record.Count;
+
+			float stddev = 0;
+			foreach (float db in record)
+			{
+				stddev += Mathf.Pow(db - mean, 2.0f);
+			}
+			stddev /= record.Count;
+			stddev = Mathf.Sqrt(stddev);
+			LowPassStdDevThreshold = stddev;
+			LowPassFilterThreshold = mean;
+			Debug.Log($"Div={stddev}");
+
+			_calibration = false;
+			CalibrationLen = 0;
+		}
 	}
 
 	// !! this is not a low pass filter, actually it's more like a damping
