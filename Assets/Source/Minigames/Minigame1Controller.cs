@@ -12,7 +12,6 @@ public class Minigame1Controller : GameEndController
 
     private float currentBlowingTime = 0f;
     private bool isBlowing = false;
-    private bool gameFinished = false;
 
     new private void Start()
     {
@@ -46,13 +45,11 @@ public class Minigame1Controller : GameEndController
 
     public override void OnLose()
     {
-        gameFinished = true;
-        text.text = "YOU LOSE!";
+        base.OnLose();
     }
 
     public override void OnWin()
     {
-        gameFinished = true;
-        text.text = "YOU WIN!";
+        base.OnWin();
     }
 }
