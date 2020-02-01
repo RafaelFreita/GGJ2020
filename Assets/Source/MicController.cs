@@ -2,36 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using LUT.Events.Primitives;
 
-
+[RequireComponent(typeof(AudioSource))]
 public class MicController : MonoBehaviour
 {
-	public Text resultDisplay;   // GUIText for displaying results
-	public Text blowDisplay;     // GUIText for displaying blow or not blow.
-	public int recordedLength = 50;    // How many previous frames of sound are analyzed.
-	public int requiedBlowTime = 4;    // How long a blow must last to be classified as a blow (and not a sigh for instance).
-	public int clamp = 160;            // Used to clamp dB (I don't really understand this either).
+	[Header("Debug")]
+	public Text resultDisplay;
+	public Text blowDisplay;
 
+	[Header("Setup")]
+	public EventBool OnBlowStatusChanged;
+
+	[Header("Mic Rec Info")]
+	/// How many previous frames of sound are analyzed.
 	public int SampleCount = 1024;
-	public int Frequency = 48000;    // Wavelength, I think.
-	public float RefValue = 0.1f;    // RMS  value for 0 dB.
-	public float Threshold = 0.02f;  // Minimum amplitude to extract pitch (recieve anything)
-	public float Alpha = 0.05f;      // The alpha for the low pass filter (I don't really understand this).
+	public int Frequency = 48000;
 	public int RecordAudioLength = 10;
+
+	[Header("Detection")]
+	public int RecordedLength = 50;
+	/// Used to clamp dB. 
+	public int Clamp = 160;
+	// RMS  value for 0 dB.
+	public float RefValue = 0.1f;
+	// Minimum amplitude to extract pitch (recieve anything)
+	public float Threshold = 0.02f;
+	// The alpha for the low pass filter (I don't really understand this).
+	public float Alpha = 0.05f;
+
+
+	/// How long a blow must last to be classified as a blow (and not a sigh for instance). (in seconds)
+	public float RequiredTimeToStartBlowing = 0.25f;
+	/// How long a blow must not be indentify to consider that the blow has actually stopped (in seconds)
+	public float RequiredTimeToStopBlowing = 0.25f;
 	public float LowPassfilterSomething = -30;
 
-	private float[] samples;           // Samples
-	private float[] spectrum;          // Spectrum
-	private List<float> dbValues;      // Used to average recent volume.
-	private List<float> pitchValues;   // Used to average recent pitch.
+	private float[] _samples;           // Samples
+	private float[] _spectrum;          // Spectrum
+	private List<float> _dbValues;      // Used to average recent volume.
+	private List<float> _pitchValues;   // Used to average recent pitch.
 
-	private float rmsValue;            // Volume in RMS (root medium square)
-	private float dbValue;             // Volume in DB
-	private float pitchValue;          // Pitch - Hz (is this frequency?)
-	private int blowingTime;           // How long each blow has lasted
+	private float _rmsValue;            // Volume in RMS (root medium square)
+	private float _dbValue;             // Volume in DB
+	private float _pitchValue;          // Pitch - Hz (is this frequency?)
 
-	private float lowPassResults;      // Low Pass Filter result
-	private float peakPowerForChannel; //
+	private float _lowPassResults;      // Low Pass Filter result
+	private float _peakPowerForChannel; //
+
+	private bool _wasBlowing = false;
+	private float _blowingTime;           // How long current blow is lasting lasting
+	private float _notBlowingTime;      // How long the user is not blowing
 
 	new private AudioSource audio;
 
@@ -42,10 +63,10 @@ public class MicController : MonoBehaviour
 
 	public void Start()
 	{
-		samples = new float[SampleCount];
-		spectrum = new float[SampleCount];
-		dbValues = new List<float>();
-		pitchValues = new List<float>();
+		_samples = new float[SampleCount];
+		_spectrum = new float[SampleCount];
+		_dbValues = new List<float>();
+		_pitchValues = new List<float>();
 
 		StartMicListener();
 	}
@@ -59,7 +80,10 @@ public class MicController : MonoBehaviour
 			StartMicListener();
 		}
 
-		resultDisplay.text = "";
+		if (resultDisplay)
+		{
+			resultDisplay.text = "";
+		}
 
 		// Gets volume and pitch values
 		AnalyzeSound();
@@ -68,7 +92,10 @@ public class MicController : MonoBehaviour
 		DeriveBlow();
 
 		// Update the meter display.
-		resultDisplay.text += "RMS: " + rmsValue.ToString("F2") + " (" + dbValue.ToString("F1") + " dB)\n" + "Pitch: " + pitchValue.ToString("F0") + " Hz";
+		if (resultDisplay)
+		{
+			resultDisplay.text += "RMS: " + _rmsValue.ToString("F2") + " (" + _dbValue.ToString("F1") + " dB)\n" + "Pitch: " + _pitchValue.ToString("F0") + " Hz";
+		}
 	}
 
 	/// Starts the Mic, and plays the audio back in (near) real-time.
@@ -88,46 +115,46 @@ public class MicController : MonoBehaviour
 	{
 
 		// Get all of our samples from the mic.
-		audio.GetOutputData(samples, 0);
+		audio.GetOutputData(_samples, 0);
 
 		// Sums squared samples
 		float sum = 0;
 		for (int i = 0; i < SampleCount; i++)
 		{
-			sum += Mathf.Pow(samples[i], 2);
+			sum += Mathf.Pow(_samples[i], 2);
 		}
 
 		//Debug.Log($"sum is {sum}");
 		// RMS is the square root of the average value of the samples.
-		rmsValue = Mathf.Sqrt(sum / SampleCount);
-		dbValue = 20 * Mathf.Log10(rmsValue / RefValue);
+		_rmsValue = Mathf.Sqrt(sum / SampleCount);
+		_dbValue = 20 * Mathf.Log10(_rmsValue / RefValue);
 
 		// Clamp it to {clamp} min
-		if (dbValue < -clamp)
+		if (_dbValue < -Clamp)
 		{
-			dbValue = -clamp;
+			_dbValue = -Clamp;
 		}
 
 		// Gets the sound spectrum.
-		audio.GetSpectrumData(spectrum, 0, FFTWindow.BlackmanHarris);
+		audio.GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
 		float loudestFrequency = 0;
 		int loudestSample = 0;
 
-		for (int i = 1; i < spectrum.Length - 1; i++)
+		for (int i = 1; i < _spectrum.Length - 1; i++)
 		{
-			Debug.DrawLine(new Vector3(i - 1, spectrum[i] + 10, 0), new Vector3(i, spectrum[i + 1] + 10, 0), Color.red);
-			Debug.DrawLine(new Vector3(i - 1, Mathf.Log(spectrum[i - 1]) + 10, 2), new Vector3(i, Mathf.Log(spectrum[i]) + 10, 2), Color.cyan);
-			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), spectrum[i - 1] - 10, 1), new Vector3(Mathf.Log(i), spectrum[i] - 10, 1), Color.green);
-			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), Mathf.Log(spectrum[i - 1]), 3), new Vector3(Mathf.Log(i), Mathf.Log(spectrum[i]), 3), Color.blue);
+			Debug.DrawLine(new Vector3(i - 1, _spectrum[i] + 10, 0), new Vector3(i, _spectrum[i + 1] + 10, 0), Color.red);
+			Debug.DrawLine(new Vector3(i - 1, Mathf.Log(_spectrum[i - 1]) + 10, 2), new Vector3(i, Mathf.Log(_spectrum[i]) + 10, 2), Color.cyan);
+			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), _spectrum[i - 1] - 10, 1), new Vector3(Mathf.Log(i), _spectrum[i] - 10, 1), Color.green);
+			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), Mathf.Log(_spectrum[i - 1]), 3), new Vector3(Mathf.Log(i), Mathf.Log(_spectrum[i]), 3), Color.blue);
 		}
 
 		// Find the highest sample.
 		for (int i = 0; i < SampleCount; i++)
 		{
-			if (spectrum[i] > loudestFrequency && spectrum[i] > Threshold)
+			if (_spectrum[i] > loudestFrequency && _spectrum[i] > Threshold)
 			{
-				loudestFrequency = spectrum[i];
-				loudestSample = i; 
+				loudestFrequency = _spectrum[i];
+				loudestSample = i;
 			}
 		}
 
@@ -139,19 +166,19 @@ public class MicController : MonoBehaviour
 		// Interpolate index using neighbours
 		if (loudestSample > 0 && loudestSample < SampleCount - 1)
 		{
-			float deltaLeftFreq = spectrum[loudestSample - 1] / spectrum[loudestSample];
-			float deltaRightFreq = spectrum[loudestSample + 1] / spectrum[loudestSample];
+			float deltaLeftFreq = _spectrum[loudestSample - 1] / _spectrum[loudestSample];
+			float deltaRightFreq = _spectrum[loudestSample + 1] / _spectrum[loudestSample];
 			interpolatedSample += 0.5f * (deltaRightFreq * deltaRightFreq - deltaLeftFreq * deltaLeftFreq);
 		}
 
 		// Convert index to frequency
-		pitchValue = interpolatedSample * (Frequency * 0.5f) / SampleCount;
+		_pitchValue = interpolatedSample * (Frequency * 0.5f) / SampleCount;
 	}
 
 	private void DeriveBlow()
 	{
 
-		UpdateRecords(dbValue, dbValues);
+		UpdateRecords(_dbValue, _dbValues);
 		//UpdateRecords(pitchValue, pitchValues);
 
 		// Find the average pitch in our records (used to decipher against whistles, clicks, etc).
@@ -163,48 +190,60 @@ public class MicController : MonoBehaviour
 		//float avgPitch = sumPitch / pitchValues.Count;
 
 		// Run our low pass filter.
-		lowPassResults = LowPassFilter(dbValue);
+		_lowPassResults = LowPassFilter(_dbValue);
 
 
-		resultDisplay.text += $" lowPassResult: {lowPassResults} \n";
+		resultDisplay.text += $" lowPassResult: {_lowPassResults} \n";
 
 		// Decides whether this instance of the result could be a blow or not.
-		if (lowPassResults > LowPassfilterSomething/* && avgPitch == 0*/)
+		if (_lowPassResults > LowPassfilterSomething/* && avgPitch == 0*/)
 		{
-			blowingTime += 1;
+			_notBlowingTime = 0;
+			_blowingTime += Time.deltaTime;
 		}
 		else
 		{
-			blowingTime = 0;
+			_notBlowingTime += Time.deltaTime;
+			_blowingTime = 0;
 		}
 
-		// Once enough successful blows have occured over the previous frames (requiredBlowTime), the blow is triggered.
-		// This example says "blowing", or "not blowing", and also blows up a sphere.
-		if (blowingTime > requiedBlowTime)
+		if (_wasBlowing && _notBlowingTime > RequiredTimeToStopBlowing)
 		{
-			blowDisplay.text = "Blowing";
+			UpdateBlowTo(false);
+
 		}
-		else
+		else if (!_wasBlowing && _blowingTime > RequiredTimeToStartBlowing)
 		{
-			blowDisplay.text = "Not blowing";
+			UpdateBlowTo(true);
 		}
+	}
+
+	private void UpdateBlowTo(bool value)
+	{
+		if (blowDisplay)
+		{
+			blowDisplay.text = value ? "Blowing" : "Not blowing";
+		}
+		_wasBlowing = value;
+		OnBlowStatusChanged.Invoke(value);
 	}
 
 	// Updates a record, by removing the oldest entry and adding the newest value (val).
 	private void UpdateRecords(float val, List<float> record)
 	{
-		if (record.Count > recordedLength)
+		if (record.Count > RecordedLength)
 		{
 			record.RemoveAt(0);
 		}
 		record.Add(val);
 	}
 
+	// !! this is not a low pass filter, actually it's more like a damping
 	/// Gives a result (I don't really understand this yet) based on the peak volume of the record
 	/// and the previous low pass results.
 	private float LowPassFilter(float peakVolume)
 	{
-		return Alpha * peakVolume + (1.0f - Alpha) * lowPassResults;
+		return Alpha * peakVolume + (1.0f - Alpha) * _lowPassResults;
 	}
 }
 
