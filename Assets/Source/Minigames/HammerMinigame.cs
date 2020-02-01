@@ -12,8 +12,10 @@ public class HammerMinigame : GameEndController
     public int objectsToSpawn = 6;
     public int minObjectsToHit = 3;
 
+    [Header("References")]
     public GameObject objectPrefab;
-
+    public Transform objectSpawnLocation;
+    public Canvas canvas;
     public Text headline;
 
     private bool isBlowing = false;
@@ -21,6 +23,11 @@ public class HammerMinigame : GameEndController
     // Timer for next spawned object
     private float nextSpawnTimer = 0.0f;
     private int objectsSpawned = 0;
+
+    private int objectsHit = 0;
+    private int objectsMissed = 0;
+
+    private List<GameObject> gameObjectsInHitzone = new List<GameObject>();
 
     new private void Start()
     {
@@ -32,30 +39,76 @@ public class HammerMinigame : GameEndController
     private void Update()
     {
         if (!gameFinished)
-        {
-            // Only increment timer for next object when last object is already done
-            if (!objectCanBeHit)
+        { 
+            nextSpawnTimer += Time.deltaTime;
+
+            if (nextSpawnTimer >= spawnRate)
             {
-                nextSpawnTimer += Time.deltaTime;
+                if (objectsSpawned < objectsToSpawn)
+                {
+                    SpawnObject();
+                }
+                else // If all objects have already been spawned
+                {
+                    CheckGameEnded();
+                }
             }
 
-            if(nextSpawnTimer >= spawnRate)
+        }
+    }
+
+    private void CheckGameEnded()
+    {
+        if ((objectsHit + objectsMissed) == objectsToSpawn)
+        {
+            if (objectsHit >= minObjectsToHit)
             {
-                SpawnObject();
+                OnWin();
+            }
+            else
+            {
+                OnLose();
             }
         }
     }
 
     private void SpawnObject()
     {
-        Instantiate(objectPrefab);
+        Instantiate(objectPrefab, objectSpawnLocation.position, Quaternion.identity, canvas.transform);
 
         nextSpawnTimer = 0.0f;
         objectsSpawned++;
     }
 
+    private void HitHammer()
+    {
+        // Set hammer to hit position
+
+        while (gameObjectsInHitzone.Count > 0)
+        {
+            //Destroy(gameObjectsInHitzone[0]);
+
+            // TODO: CHANGE SPRITE INSTEAD OF COLOR OR SOMETHING
+            gameObjectsInHitzone[0].GetComponent<Image>().color = Color.green;
+
+            gameObjectsInHitzone.RemoveAt(0);
+            objectsHit++;
+        }
+    }
+
+    private void LiftHammer()
+    {
+        // Set hammer back lifted
+    }
+
     public override void OnBlowStatusChange(bool state)
     {
+        // Start blowing is a hit
+        if (!isBlowing && state) { HitHammer(); }
+
+        // Stop blowing turns hammer back up
+        if (isBlowing && !state) { LiftHammer(); }
+
         isBlowing = state;
     }
 
@@ -68,5 +121,26 @@ public class HammerMinigame : GameEndController
     {
         base.OnWin();
     }
-    
+
+    public void OnObjectEnterHitzone(GameObject go)
+    {
+        Debug.Log("ENTERED");
+        gameObjectsInHitzone.Add(go);
+    }
+
+    public void OnObjectLeaveHitzone(GameObject go)
+    {
+
+        // Only if GO still exist (it can leave the trigger when it's destroyed)
+        if (gameObjectsInHitzone.Find(el => el == go))
+        {
+            Debug.Log("LEFT");
+            objectsMissed++;
+            gameObjectsInHitzone.Remove(go);
+        }
+        Destroy(go);
+
+        // Effect of losing object?
+    }
+
 }
