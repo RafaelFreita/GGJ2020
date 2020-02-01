@@ -219,7 +219,7 @@ public class MicController : MonoBehaviour
 		// Decides whether this instance of the result could be a blow or not.
 		float ambientLoudnessDiff = _lowPassResults - CalAmbientLoudness;
 		float blowLoudnessDiff = _lowPassResults - CalBlowLoudness;
-		if (blowLoudnessDiff > CalBlowStdDev && ambientLoudnessDiff > CalAmbientStdDev * 3.0f)
+		if (blowLoudnessDiff > CalBlowStdDev * -2.0f && ambientLoudnessDiff > CalAmbientStdDev * 3.0f)
 		{
 			_notBlowingTime = 0;
 			_blowingTime += Time.deltaTime;
