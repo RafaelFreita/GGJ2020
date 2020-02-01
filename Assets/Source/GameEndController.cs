@@ -7,9 +7,9 @@ abstract public class GameEndController : MonoBehaviour
 {
 
     [SerializeField]
-    private EventBool onBlowStatusChanged;
+    private EventBool  onBlowStatusChanged = null;
     [SerializeField]
-    private EventBool onGameEnd;
+    private EventBool onGameEnd = null;
     protected bool gameFinished = false;
 
     protected void Start()
