@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -130,7 +130,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 367203602}
-  - component: {fileID: 367203601}
   - component: {fileID: 367203600}
   m_Layer: 0
   m_Name: Minigame Controller
@@ -148,37 +147,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 367203599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 870031d6bba12d04b87a5ab293086a3c, type: 3}
+  m_Script: {fileID: 11500000, guid: cdf94ed8d09be404b8a31706611d8304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugText: {fileID: 1420139890}
---- !u!114 &367203601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 367203599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 502915f858023dd418ad74b44daaf54c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetEvent: {fileID: 11400000, guid: 6a4b3db70fe263844aaf9ecff2d19c4e, type: 2}
-  _onInvoke:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 367203600}
-        m_MethodName: OnBlowingStateChange
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  onBlowStatusChanged: {fileID: 11400000, guid: 6a4b3db70fe263844aaf9ecff2d19c4e,
+    type: 2}
+  blowHoldingTime: 5
+  text: {fileID: 1420139890}
 --- !u!4 &367203602
 Transform:
   m_ObjectHideFlags: 0
@@ -376,8 +351,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 62}
+  m_SizeDelta: {x: -443.3, y: -206.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1420139890
 MonoBehaviour:
@@ -561,8 +536,8 @@ MonoBehaviour:
   Threshold: 0.02
   Alpha: 0.5
   RequiredTimeToStartBlowing: 0.05
-  RequiredTimeToStopBlowing: 0.1
-  LowPassfilterSomething: -5
+  RequiredTimeToStopBlowing: 0.3
+  LowPassfilterSomething: -20
 --- !u!82 &1546747874
 AudioSource:
   m_ObjectHideFlags: 0
