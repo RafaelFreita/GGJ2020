@@ -39,12 +39,25 @@ public class MicController : MonoBehaviour
 		set { _calibration = value; }
 	}
 	public int CalibrationLen = 0;
+	public int CalibrationMarginAmount = 4;
+	[SerializeField]
+	private Text ThresholdText;
+	public void SetCalibrationMarginAmount(float slider)
+	{
+		CalibrationMarginAmount = (int)slider;
+		if (ThresholdText != null)
+		{
+			ThresholdText.text = "Threshold: " + CalibrationMarginAmount;
+		}
+	}
 
 	/// How long a blow must last to be classified as a blow (and not a sigh for instance). (in seconds)
 	public float RequiredTimeToStartBlowing = 0.25f;
 	/// How long a blow must not be indentify to consider that the blow has actually stopped (in seconds)
 	public float RequiredTimeToStopBlowing = 0.25f;
 	public float LowPassFilterThreshold = -30;
+	[SerializeField]
+	private Text LowPassStdDevText;
 	public float LowPassStdDevThreshold = 3;
 
 	private float[] _samples;           // Samples
@@ -193,13 +206,13 @@ public class MicController : MonoBehaviour
 		// Run our low pass filter.
 		_lowPassResults = LowPassFilter(_dbValue);
 
-        if (resultDisplay)
-        {
-            resultDisplay.text += $" lowPassResult: {_lowPassResults} \n";
-        }
+		if (resultDisplay)
+		{
+			resultDisplay.text += $" lowPassResult: {_lowPassResults} \n";
+		}
 
 		// Decides whether this instance of the result could be a blow or not.
-		if (_lowPassResults - LowPassFilterThreshold > 3 * LowPassStdDevThreshold/* && avgPitch == 0*/)
+		if (_lowPassResults - LowPassFilterThreshold > CalibrationMarginAmount * LowPassStdDevThreshold/* && avgPitch == 0*/)
 		{
 			_notBlowingTime = 0;
 			_blowingTime += Time.deltaTime;
@@ -239,7 +252,7 @@ public class MicController : MonoBehaviour
 			record.RemoveAt(0);
 		}
 		record.Add(val);
-		if(!_calibration) return;
+		if (!_calibration) return;
 		if (CalibrationLen < RecordedLength)
 		{
 			CalibrationLen++;
@@ -261,6 +274,10 @@ public class MicController : MonoBehaviour
 			stddev /= record.Count;
 			stddev = Mathf.Sqrt(stddev);
 			LowPassStdDevThreshold = stddev;
+			if (LowPassStdDevText != null)
+			{
+				LowPassStdDevText.text = "StdDev: " + stddev.ToString("F2");
+			}
 			LowPassFilterThreshold = mean;
 			Debug.Log($"Div={stddev}");
 
