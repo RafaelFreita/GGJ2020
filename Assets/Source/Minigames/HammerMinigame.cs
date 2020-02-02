@@ -17,7 +17,6 @@ public class HammerMinigame : GameEndController
     public GameObject objectPrefab;
     public GameObject linePrefab;
     public Transform objectSpawnLocation;
-    public TextMeshProUGUI headline;
     public ParticleSystem hitzonePS;
 
     [Header("Hammer Sprites")]
@@ -45,8 +44,6 @@ public class HammerMinigame : GameEndController
     {
         base.Start();
 
-        headline.text = "Hit the hammer on the right time to fix the toys!";
-
         nextSpawnTimerx3 = nextSpawnTimer / 5f;
         spawnRatex3 = spawnRate / 5f;
 
@@ -55,7 +52,6 @@ public class HammerMinigame : GameEndController
 
     private void WarmupRoller()
     {
-        Debug.Log(linePrefab.GetComponent<HammerObjectMovement>().speed);
         int iterationsPerTimer = Mathf.CeilToInt(spawnRatex3 / Time.fixedDeltaTime);
         for (int i = 0; i < 12; i++)
         {
