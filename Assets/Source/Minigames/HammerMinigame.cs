@@ -60,7 +60,7 @@ public class HammerMinigame : GameEndController
     private void WarmupRoller()
     {
         int iterationsPerTimer = Mathf.CeilToInt(spawnRatex3 / Time.fixedDeltaTime);
-        for (int i = 0; i < 12; i++)
+        for (int i = -1; i < 20; i++)
         {
             Vector3 offset = Vector3.down * linePrefab.GetComponent<HammerObjectMovement>().speed * Time.fixedDeltaTime * i * iterationsPerTimer;
             //Debug.Log(offset);

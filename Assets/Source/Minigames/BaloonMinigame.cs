@@ -11,7 +11,8 @@ public class BaloonMinigame : GameEndController
 	public int balloonsToFill = 3;
 	public float maxMinigameTime = 10.0f;
 
-	// Ballon Image Refs
+    // Ballon Image Refs
+    [SerializeField] SpriteRenderer balloonSpriteRenderer;
 	[SerializeField] Transform ballonRootBone = null;
 	[SerializeField] Transform ballonGrowBone = null;
 	[SerializeField] AnimationCurve ballonShakingCurve = null;
@@ -37,7 +38,8 @@ public class BaloonMinigame : GameEndController
 		headerText.text = $"Blow to fill ballons! SAVE THE PARTY!!!";
 
 		sliderImage = slider.fillRect.GetComponent<Image>();
-	}
+        ResetBalloon();
+    }
 
 	private void Update()
 	{
@@ -65,8 +67,9 @@ public class BaloonMinigame : GameEndController
 		float blowSlider = currentBlowingTime / maxTimeFill;
 		if (blowSlider > 1.0f)
 		{
-			currentBlowingTime = 0;
-			return;
+            ResetBalloon();
+            // Animation of balloon flying
+            return;
 		}
 		ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(ballonShakingCurve.Evaluate(blowSlider) * 145) * 2, Vector3.forward);
 		ballonGrowBone.localScale = Vector3.one * (1.0f + ballonGrowingCurve.Evaluate(blowSlider) * 1.8f);
@@ -89,16 +92,22 @@ public class BaloonMinigame : GameEndController
 		return currentBlowingTime >= minTimeFill && currentBlowingTime <= maxTimeFill;
 	}
 
+    private void ResetBalloon()
+    {
+        currentBlowingTime = 0.0f;
+        balloonSpriteRenderer.color = Random.ColorHSV(0f, 1f, .6f, .8f, .7f, .9f);
+    }
+
 	private void CheckCurrentBalloon()
 	{
 		if (IsBalloonReady())
 		{
 			balloonsFilled++;
 			textBalloonsFilled.text = balloonsFilled.ToString();
-			currentBlowingTime = 0.0f;
+            ResetBalloon();
 
-			// Check if all balloons were filled
-			if (balloonsFilled >= balloonsToFill)
+            // Check if all balloons were filled
+            if (balloonsFilled >= balloonsToFill)
 			{
 				OnWin();
 			}
