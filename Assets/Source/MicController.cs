@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using LUT.Events.Primitives;
+#if PLATFORM_ANDROID
+using UnityEngine.Android;
+#endif
 
 [RequireComponent(typeof(AudioSource))]
 public class MicController : MonoBehaviour
@@ -124,6 +125,13 @@ public class MicController : MonoBehaviour
 	/// Starts the Mic, and plays the audio back in (near) real-time.
 	private void StartMicListener()
 	{
+#if PLATFORM_ANDROID
+		while(!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+		{
+			Permission.RequestUserPermission(Permission.Microphone);
+		}
+#endif
+
 		audio.clip = Microphone.Start(null, true, RecordAudioLength, Frequency);
 		// HACK - Forces the function to wait until the microphone has started, before moving onto the play function.
 		while (!(Microphone.GetPosition(null) > 0))
