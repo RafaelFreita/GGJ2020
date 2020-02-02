@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1314,18 +1314,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8336280008461598272, guid: 803946eee9296214a91da8099d5a1a8c,
-        type: 3}
-      propertyPath: CalAmbientPanelPrefab
-      value: 
-      objectReference: {fileID: 4743745892627075888, guid: f2af0f9c2402c674e8aab22cf02100e7,
-        type: 3}
-    - target: {fileID: 8336280008461598272, guid: 803946eee9296214a91da8099d5a1a8c,
-        type: 3}
-      propertyPath: CalBlowPanelPrefab
-      value: 
-      objectReference: {fileID: 3882848790769050414, guid: 2a5fac0f54673e048b91dcf3c0797951,
-        type: 3}
     - target: {fileID: 8336280008461598273, guid: 803946eee9296214a91da8099d5a1a8c,
         type: 3}
       propertyPath: m_Name
