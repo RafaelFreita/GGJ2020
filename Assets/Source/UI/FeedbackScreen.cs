@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using LUT.Events.Primitives;
 
-[RequireComponent(typeof(Animation))]
+[RequireComponent(typeof(Animation), typeof(AudioSource))]
 public class FeedbackScreen : MonoBehaviour
 {
 	[SerializeField]
@@ -32,12 +32,14 @@ public class FeedbackScreen : MonoBehaviour
 	public Color winTextColor;
 	public Color winInteractableColor;
 	public string winMainText = "Great!";
+	public AudioClip winAudioClip = null;
 	[Header("Fail")]
 	public Color loseBackgroundColor;
 	public Color loseTextColor;
 	public Color loseInteractableColor;
 	public string loseMainText = "Ops...";
 	public string loseSubText = "You've lost you breath";
+	public AudioClip loseAudioClip = null;
 	[Header("Game Over")]
 	public Color gameOverBackgroundColor;
 	public Color gameOverTextColor;
@@ -45,9 +47,11 @@ public class FeedbackScreen : MonoBehaviour
 
 	private new Animation animation;
 	private GameFlowController cachedGameFlow;
+	private AudioSource audioSource;
 
 	protected void Start()
 	{
+		audioSource = GetComponent<AudioSource>();
 		animation = GetComponent<Animation>();
 		onGameEnd.Register(OnGameEnd);
 		cachedGameFlow = GameFlowController.Instance;
@@ -74,6 +78,8 @@ public class FeedbackScreen : MonoBehaviour
 			background.color = winBackgroundColor;
 			UpdateScore();
 			SetInteractablesColor(winInteractableColor);
+			audioSource.clip = winAudioClip;
+			audioSource.Play();
 		}
 		else if (cachedGameFlow.IsAlive())
 		{
@@ -82,6 +88,8 @@ public class FeedbackScreen : MonoBehaviour
 			feedbackText.color = mainText.color = loseTextColor;
 			background.color = loseBackgroundColor;
 			SetInteractablesColor(loseInteractableColor);
+			audioSource.clip = loseAudioClip;
+			audioSource.Play();
 		}
 		else
 		{
@@ -92,6 +100,8 @@ public class FeedbackScreen : MonoBehaviour
 			background.color = gameOverBackgroundColor;
 			UpdateScore();
 			SetInteractablesColor(loseInteractableColor);
+			audioSource.clip = loseAudioClip;
+			audioSource.Play();
 		}
 
 		animation.Play(inAnimation.name);
