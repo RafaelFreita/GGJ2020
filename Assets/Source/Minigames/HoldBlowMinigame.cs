@@ -26,18 +26,16 @@ public class HoldBlowMinigame : GameEndController
     new private void Start()
     {
         base.Start();
-
-        text.text = $"Blow for {blowHoldingTime} seconds!";
     }
 
     private void Update()
     {
+        text.text = (blowHoldingTime - Mathf.FloorToInt(currentBlowingTime)).ToString();
         if (isBlowing && !isGamePaused)
         {
             UpdateSparksPS();
 
             currentBlowingTime += Time.deltaTime;
-            text.text = currentBlowingTime.ToString("F2");
             if (currentBlowingTime >= blowHoldingTime)
             {
                 OnWin();
