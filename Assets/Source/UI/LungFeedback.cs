@@ -17,11 +17,9 @@ public class LungFeedback : MonoBehaviour
 
     private Image[] lungs;
 
-    private GameFlowController cachedGameFlow;
     private void Awake()
     {
         onGameEnd.Register(OnGameEnd);
-        cachedGameFlow = GameFlowController.Instance;
         lungs = GetComponentsInChildren<Image>();
     }
 
@@ -32,10 +30,11 @@ public class LungFeedback : MonoBehaviour
 
     public void OnGameEnd(bool won)
     {
+        var gameflow = GameFlowController.Instance;
         for (int i = 0; i < lungs.Length; i++)
         {
             Animation anim = lungs[i].GetComponent<Animation>();
-            if (cachedGameFlow.currentLife > i)
+            if (gameflow.currentLife > i)
             {
                 lungs[i].sprite = happyLung;
 
