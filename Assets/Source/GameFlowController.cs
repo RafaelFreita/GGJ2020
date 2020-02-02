@@ -14,7 +14,7 @@ public class GameFlowController : Singleton<GameFlowController>
 	public List<SceneReference> minigames;
 
 	public int currentScore = 0;
-	public int lastGivenScore = 0;
+	public int previousScore = 0;
 
 	public int maxLife = 3;
 	public int currentLife = 3;
@@ -40,7 +40,7 @@ public class GameFlowController : Singleton<GameFlowController>
 	{
 		currentLife = maxLife;
 		currentScore = 0;
-		lastGivenScore = 0;
+		previousScore = 0;
 		lastMinigame = -1;
 
 		if (!MicController.Instance.AlreadyCalibrated)
@@ -107,8 +107,8 @@ public class GameFlowController : Singleton<GameFlowController>
 
 	public void GiveScore(int newScore)
 	{
+		previousScore = currentScore;
 		currentScore += newScore;
-		lastGivenScore = newScore;
 	}
 
 
