@@ -46,6 +46,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4836945135844766600}
   - component: {fileID: 4836945135844766599}
+  - component: {fileID: 2994971500698958358}
   m_Layer: 5
   m_Name: MinigameTimeSlider
   m_TagString: Untagged
@@ -124,6 +125,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2994971500698958358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4836945135844766601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4487b44b679b615489c0ad2335757362, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4836945135993357484
 GameObject:
   m_ObjectHideFlags: 0

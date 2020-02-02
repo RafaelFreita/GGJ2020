@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using LUT.Events.Primitives;
 
+/// <summary>
+///  This is actually base minigame controller
+/// </summary>
 abstract public class GameEndController : MonoBehaviour
 {
 
@@ -12,6 +15,8 @@ abstract public class GameEndController : MonoBehaviour
     private EventBool onGameEnd = null;
     protected bool gameFinished = false;
 
+    public List<string> tooltips;
+
     protected void Start()
     {
         onBlowStatusChanged.Register(OnBlowStatusChange);
@@ -20,6 +25,17 @@ abstract public class GameEndController : MonoBehaviour
     private void OnDestroy()
     {
         onBlowStatusChanged.Unregister(OnBlowStatusChange);
+    }
+
+    public virtual float GetNormalizedRemainingTime()
+    {
+        return 1;
+    }
+
+    public virtual string GetRandomMinigameTooltip()
+    {
+        if (tooltips.Count == 0) return "";
+        return tooltips[Random.Range(0, tooltips.Count)];
     }
 
     public abstract void OnBlowStatusChange(bool state);

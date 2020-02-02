@@ -123,4 +123,11 @@ public class BaloonMinigame : GameEndController
 	{
 		base.OnWin();
 	}
+
+
+	public override float GetNormalizedRemainingTime()
+	{
+		return totalMinigameTime / maxMinigameTime;
+	}
+
 }
