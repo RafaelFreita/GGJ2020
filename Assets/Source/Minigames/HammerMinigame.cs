@@ -14,33 +14,64 @@ public class HammerMinigame : GameEndController
 
     [Header("References")]
     public GameObject objectPrefab;
+    public GameObject linePrefab;
     public Transform objectSpawnLocation;
-    public Canvas canvas;
     public Text headline;
+
+    [Header("Hammer Sprites")]
+    public Image hammerImage;
+    public Sprite hammerDownSprite;
+    public Sprite hammerUpSprite;
 
     private bool isBlowing = false;
     private bool objectCanBeHit = false;
     // Timer for next spawned object
     private float nextSpawnTimer = 0.0f;
     private int objectsSpawned = 0;
-
+    [SerializeField]
     private int objectsHit = 0;
+    [SerializeField]
     private int objectsMissed = 0;
 
     private List<GameObject> gameObjectsInHitzone = new List<GameObject>();
+
+    public Transform linesParent;
+    private float nextSpawnTimerx3;
+    private float spawnRatex3;
 
     new private void Start()
     {
         base.Start();
 
         headline.text = "Hit the hammer on the right time to fix the toys!";
+
+        nextSpawnTimerx3 = nextSpawnTimer / 5f;
+        spawnRatex3 = spawnRate / 5f;
     }
 
     private void Update()
     {
         if (!gameFinished)
-        { 
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                HitHammer();
+            }
+
+
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                LiftHammer();
+            }
+
             nextSpawnTimer += Time.deltaTime;
+            nextSpawnTimerx3 += Time.deltaTime;
+
+            if (nextSpawnTimerx3 >= spawnRatex3)
+            {
+                nextSpawnTimerx3 = 0.0f;
+                Instantiate(linePrefab, objectSpawnLocation.position, Quaternion.identity, linesParent);
+            }
 
             if (nextSpawnTimer >= spawnRate)
             {
@@ -74,7 +105,7 @@ public class HammerMinigame : GameEndController
 
     private void SpawnObject()
     {
-        Instantiate(objectPrefab, objectSpawnLocation.position, Quaternion.identity, canvas.transform);
+        Instantiate(objectPrefab, objectSpawnLocation.position, Quaternion.identity, objectSpawnLocation);
 
         nextSpawnTimer = 0.0f;
         objectsSpawned++;
@@ -83,6 +114,7 @@ public class HammerMinigame : GameEndController
     private void HitHammer()
     {
         // Set hammer to hit position
+        hammerImage.sprite = hammerDownSprite;
 
         while (gameObjectsInHitzone.Count > 0)
         {
@@ -99,6 +131,7 @@ public class HammerMinigame : GameEndController
     private void LiftHammer()
     {
         // Set hammer back lifted
+        hammerImage.sprite = hammerUpSprite;
     }
 
     public override void OnBlowStatusChange(bool state)

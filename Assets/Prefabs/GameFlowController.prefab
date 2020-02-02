@@ -47,8 +47,8 @@ MonoBehaviour:
   _destroyExistentObject: 1
   onEndGame: {fileID: 11400000, guid: 5d8bb06eda852e642bf6952e2adde034, type: 2}
   mainMenu:
-    scene: {fileID: 0}
-    sceneName: 
+    scene: {fileID: 102900000, guid: 2b10025ab34c500439a2a24b1e0576f7, type: 3}
+    sceneName: MainMenu
   minigames:
   - scene: {fileID: 102900000, guid: 2680fb83ba91cfa46856bf1181247dda, type: 3}
     sceneName: Minigame1-Hold
