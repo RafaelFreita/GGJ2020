@@ -108,10 +108,10 @@ RectTransform:
   m_Father: {fileID: 3882848790769050415}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.13093749, y: 0.3700202}
-  m_AnchorMax: {x: 0.8690625, y: 0.57708615}
+  m_AnchorMin: {x: 0.17765044, y: 0.3660879}
+  m_AnchorMax: {x: 0.8223495, y: 0.58101845}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.000011444092, y: 0.00001335144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3882848791088632955
 CanvasRenderer:
@@ -142,8 +142,9 @@ MonoBehaviour:
   m_text: Press the button down, then, after the countdown, blow at the device's
     mic.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 92b1afe8306c7064c892be265e53fa42, type: 2}
+  m_sharedMaterial: {fileID: -5803791238520980833, guid: 92b1afe8306c7064c892be265e53fa42,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -168,7 +169,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 87.05
+  m_fontSize: 79.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -297,8 +298,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Blowing Loudness Calibration
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 92b1afe8306c7064c892be265e53fa42, type: 2}
+  m_sharedMaterial: {fileID: -5803791238520980833, guid: 92b1afe8306c7064c892be265e53fa42,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -323,13 +325,13 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 119.45
+  m_fontSize: 116.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 120
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_textAlignment: 514
   m_characterSpacing: 0
   m_wordSpacing: 0

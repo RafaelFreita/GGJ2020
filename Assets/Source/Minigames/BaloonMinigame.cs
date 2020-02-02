@@ -12,10 +12,10 @@ public class BaloonMinigame : GameEndController
 	public float maxMinigameTime = 10.0f;
 
 	// Ballon Image Refs
-	[SerializeField] Transform ballonRootBone;
-	[SerializeField] Transform ballonGrowBone;
-	[SerializeField] AnimationCurve ballonShakingCurve;
-	[SerializeField] AnimationCurve ballonGrowingCurve;
+	[SerializeField] Transform ballonRootBone = null;
+	[SerializeField] Transform ballonGrowBone = null;
+	[SerializeField] AnimationCurve ballonShakingCurve = null;
+	[SerializeField] AnimationCurve ballonGrowingCurve = null;
 
 	public Text headerText;
 	public Color balloonNotReadyColor;

@@ -2,57 +2,59 @@
 using UnityEngine;
 using LUT;
 using UnityEngine.SceneManagement;
-using LUT.Events.Primitives;
 using LUT.Snippets;
 
 public class GameFlowController : Singleton<GameFlowController>
 {
-	public EventBool onEndGame;
-
-
 	public SceneReference mainMenu;
 	public List<SceneReference> minigames;
 
 	public int currentScore = 0;
-	public int lastGivenScore = 0;
+	public int previousScore = 0;
 
 	public int maxLife = 3;
 	public int currentLife = 3;
 	public bool hasLostLife = false;
 
-
+	[SerializeField]
 	private int lastMinigame = -1;
+
+	public override void Awake()
+	{
+		base.Awake();
+	}
 
 	public override void Start()
 	{
 		base.Start();
-		onEndGame.Register(OnEndGame);
-	}
-
-	public void OnDestroy()
-	{
-		//❤❤❤❤❤❤❤😍😍😍😍😍🤳🤳🤳🤳
-		onEndGame.Unregister(OnEndGame);
-
 	}
 
 	public void StartGame()
 	{
 		currentLife = maxLife;
 		currentScore = 0;
-		lastGivenScore = 0;
+		previousScore = 0;
 		lastMinigame = -1;
 
-		LoadNextMinigame();
+		if (!MicController.Instance.AlreadyCalibrated)
+		{
+			MicController.Instance.StartCalibration(LoadNextMinigame);
+		}
+		else
+		{
+			LoadNextMinigame();
+		}
 	}
 
-	public void OnEndGame(bool value)
+	public void OnEndGame(bool value, int score)
 	{
+		Debug.Log($"OnEndGame {value}, {score}");
 		hasLostLife = !value;
 		if (!value)
 		{
 			currentLife -= 1;
 		}
+		GiveScore(score);
 	}
 
 	private int GetNextMinigame()
@@ -88,7 +90,7 @@ public class GameFlowController : Singleton<GameFlowController>
 
 	public void ContinueGame()
 	{
-		if(IsAlive())
+		if (IsAlive())
 		{
 			LoadNextMinigame();
 		}
@@ -100,8 +102,8 @@ public class GameFlowController : Singleton<GameFlowController>
 
 	public void GiveScore(int newScore)
 	{
+		previousScore = currentScore;
 		currentScore += newScore;
-		lastGivenScore = newScore;
 	}
 
 

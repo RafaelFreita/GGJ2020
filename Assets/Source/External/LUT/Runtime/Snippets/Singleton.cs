@@ -36,16 +36,16 @@ namespace LUT
 			{
 				lock (_lock)
 				{
-					if (HasInstance())
-					{
-						_instance = (T)FindObjectOfType(typeof(T));
+					//if (HasInstance())
+					//{
+					//	_instance = (T)FindObjectOfType(typeof(T));
 
-						if (_instance == null)
-						{
-							CreateInstance();
-						}
+					//	if (_instance == null)
+					//	{
+					//		CreateInstance();
+					//	}
 
-					}
+					//}
 					return _instance;
 				}
 			}
@@ -72,7 +72,7 @@ namespace LUT
 
 		public virtual void Start()
 		{
-			CheckIfDuplicated();
+			CheckIfDuplicated(); 
 		}
 
 

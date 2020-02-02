@@ -44,8 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6556b1bb80430e64ca9cd000ba14c12a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _persistent: 1
+  _destroyExistentObject: 1
   resultDisplay: {fileID: 0}
   blowDisplay: {fileID: 0}
+  CalibrationAmbientText: {fileID: 0}
+  CalibrationBlowText: {fileID: 0}
   OnBlowStatusChanged: {fileID: 11400000, guid: 6a4b3db70fe263844aaf9ecff2d19c4e,
     type: 2}
   SampleCount: 1024
@@ -56,9 +60,19 @@ MonoBehaviour:
   RefValue: 0.1
   Threshold: 0.02
   Alpha: 0.5
+  AlreadyCalibrated: 0
+  CalAmbientPanelPrefab: {fileID: 4743745892627075888, guid: f2af0f9c2402c674e8aab22cf02100e7,
+    type: 3}
+  CalAmbientLen: 0
+  CalAmbientStdDev: 3
+  CalAmbientLoudness: -30
+  CalBlowPanelPrefab: {fileID: 3882848790769050414, guid: 2a5fac0f54673e048b91dcf3c0797951,
+    type: 3}
+  CalBlowLen: 0
+  CalBlowStdDev: 0
+  CalBlowLoudness: 0
   RequiredTimeToStartBlowing: 0.05
   RequiredTimeToStopBlowing: 0.1
-  LowPassfilterSomething: -20
 --- !u!82 &8336280008461598275
 AudioSource:
   m_ObjectHideFlags: 0
