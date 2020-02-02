@@ -1890,6 +1890,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8336280008461598272, guid: 803946eee9296214a91da8099d5a1a8c,
+        type: 3}
+      propertyPath: prefabCalibrationCanvas
+      value: 
+      objectReference: {fileID: 8132937582650799224, guid: 02382da162761cb4f8e252f20e90328c,
+        type: 3}
     - target: {fileID: 8336280008461598273, guid: 803946eee9296214a91da8099d5a1a8c,
         type: 3}
       propertyPath: m_Name
