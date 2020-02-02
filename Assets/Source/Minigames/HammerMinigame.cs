@@ -60,7 +60,7 @@ public class HammerMinigame : GameEndController
         for (int i = 0; i < 12; i++)
         {
             Vector3 offset = Vector3.down * linePrefab.GetComponent<HammerObjectMovement>().speed * Time.fixedDeltaTime * i * iterationsPerTimer;
-            Debug.Log(offset);
+            //Debug.Log(offset);
             Instantiate(linePrefab, objectSpawnLocation.position + offset, Quaternion.identity, linesParent);
         }
     }
@@ -174,7 +174,7 @@ public class HammerMinigame : GameEndController
 
     public void OnObjectEnterHitzone(GameObject go)
     {
-        Debug.Log("ENTERED");
+        //Debug.Log("ENTERED");
         gameObjectsInHitzone.Add(go);
     }
 
@@ -184,7 +184,7 @@ public class HammerMinigame : GameEndController
         // Only if GO still exist (it can leave the trigger when it's destroyed)
         if (gameObjectsInHitzone.Find(el => el == go))
         {
-            Debug.Log("LEFT");
+            //Debug.Log("LEFT");
             objectsMissed++;
             gameObjectsInHitzone.Remove(go);
         }
