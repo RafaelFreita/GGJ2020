@@ -17,7 +17,6 @@ public class HammerMinigame : GameEndController
     public GameObject objectPrefab;
     public GameObject linePrefab;
     public Transform objectSpawnLocation;
-    public TextMeshProUGUI headline;
     public ParticleSystem hitzonePS;
 
     [Header("Hammer Sprites")]
@@ -34,6 +33,7 @@ public class HammerMinigame : GameEndController
     private int objectsHit = 0;
     [SerializeField]
     private int objectsMissed = 0;
+    private float timeToNextSpawn = 2.0f;
 
     private List<GameObject> gameObjectsInHitzone = new List<GameObject>();
 
@@ -45,17 +45,20 @@ public class HammerMinigame : GameEndController
     {
         base.Start();
 
-        headline.text = "Hit the hammer on the right time to fix the toys!";
-
         nextSpawnTimerx3 = nextSpawnTimer / 5f;
         spawnRatex3 = spawnRate / 5f;
 
         WarmupRoller();
+        GetNextSpawnTime();
+    }
+
+    private void GetNextSpawnTime()
+    {
+        timeToNextSpawn = spawnRate + Random.Range(-spawnRate*0.5f, spawnRate*1.5f);
     }
 
     private void WarmupRoller()
     {
-        Debug.Log(linePrefab.GetComponent<HammerObjectMovement>().speed);
         int iterationsPerTimer = Mathf.CeilToInt(spawnRatex3 / Time.fixedDeltaTime);
         for (int i = 0; i < 12; i++)
         {
@@ -89,7 +92,7 @@ public class HammerMinigame : GameEndController
                 Instantiate(linePrefab, objectSpawnLocation.position, Quaternion.identity, linesParent);
             }
 
-            if (nextSpawnTimer >= spawnRate)
+            if (nextSpawnTimer >= timeToNextSpawn)
             {
                 if (objectsSpawned < objectsToSpawn)
                 {
@@ -122,7 +125,7 @@ public class HammerMinigame : GameEndController
     private void SpawnObject()
     {
         Instantiate(objectPrefab, objectSpawnLocation.position, Quaternion.identity, objectSpawnLocation);
-
+        GetNextSpawnTime();
         nextSpawnTimer = 0.0f;
         objectsSpawned++;
     }

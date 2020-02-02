@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class HoldBlowMinigame : GameEndController
 {
@@ -9,8 +10,18 @@ public class HoldBlowMinigame : GameEndController
 
     public TextMeshProUGUI text;
 
+    public Animation explosionAnimation;
+    public AnimationClip explosionAnimClip;
+
+
+    public System.Collections.Generic.List<ParticleSystem> sparksSystems = new System.Collections.Generic.List<ParticleSystem>();
+
     private float currentBlowingTime = 0f;
     private bool isBlowing = false;
+
+    [SerializeField]
+    private float sparkSizeChangeSpeed = 1.0f;
+    private float sparksSizeMultiplier = 0.0f;
 
     new private void Start()
     {
@@ -23,12 +34,24 @@ public class HoldBlowMinigame : GameEndController
     {
         if (isBlowing && !isGamePaused)
         {
+            UpdateSparksPS();
+
             currentBlowingTime += Time.deltaTime;
             text.text = currentBlowingTime.ToString("F2");
             if (currentBlowingTime >= blowHoldingTime)
             {
                 OnWin();
             }
+        }
+    }
+
+    private void UpdateSparksPS()
+    {
+        foreach (var p in sparksSystems)
+        {
+            var psMain = p.main;
+            psMain.startSizeMultiplier -= Time.deltaTime * sparkSizeChangeSpeed;
+            psMain.startSizeMultiplier = Mathf.Max(psMain.startSizeMultiplier, 1.0f);
         }
     }
 
@@ -44,11 +67,18 @@ public class HoldBlowMinigame : GameEndController
 
     public override void OnLose()
     {
+        explosionAnimation.Play(explosionAnimClip.name);
+        StartCoroutine(WaitForExplosion());
         base.OnLose();
     }
 
     public override void OnWin()
     {
         base.OnWin();
+    }
+
+    private IEnumerator WaitForExplosion()
+    {
+        yield return new WaitForSeconds(explosionAnimClip.length);
     }
 }
