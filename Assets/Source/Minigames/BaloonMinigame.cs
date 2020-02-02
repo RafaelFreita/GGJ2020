@@ -62,9 +62,7 @@ public class BaloonMinigame : GameEndController
         {
             OnLose();
         }
-
-        isBlowing = Input.GetKey(KeyCode.Space);
-
+        
         if (isBlowing)
         {
             currentBlowingTime += Time.deltaTime;
