@@ -24,6 +24,8 @@ public class HammerMinigame : GameEndController
     public Sprite hammerDownSprite;
     public Sprite hammerUpSprite;
 
+    public Sprite toySprite;
+
     private bool isBlowing = false;
     private bool objectCanBeHit = false;
     // Timer for next spawned object
@@ -153,8 +155,7 @@ public class HammerMinigame : GameEndController
         {
             //Destroy(gameObjectsInHitzone[0]);
 
-            // TODO: CHANGE SPRITE INSTEAD OF COLOR OR SOMETHING
-            gameObjectsInHitzone[0].GetComponent<Image>().color = Color.green;
+            gameObjectsInHitzone[0].GetComponent<Image>().sprite = toySprite;
 
             gameObjectsInHitzone.RemoveAt(0);
             objectsHit++;
@@ -205,7 +206,6 @@ public class HammerMinigame : GameEndController
             objectsMissed++;
             gameObjectsInHitzone.Remove(go);
         }
-        Destroy(go);
 
         // Effect of losing object?
     }
