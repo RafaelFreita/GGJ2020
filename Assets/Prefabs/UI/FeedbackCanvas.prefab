@@ -32,10 +32,10 @@ RectTransform:
   m_Father: {fileID: 7710544491626112467}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.24449073, y: 0.8334375}
-  m_AnchorMax: {x: 0.75550926, y: 0.8901042}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 144.1}
+  m_SizeDelta: {x: 0, y: 397.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7710544490356022626
 CanvasRenderer:
@@ -92,14 +92,14 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 72
+  m_fontSize: 209.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 209.2
   m_fontStyle: 0
-  m_textAlignment: 258
+  m_textAlignment: 514
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -272,8 +272,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGameEnd: {fileID: 11400000, guid: 5d8bb06eda852e642bf6952e2adde034, type: 2}
   feedbackText: {fileID: 7710544490356022627}
+  background: {fileID: 7710544491750861114}
   inAnimation: {fileID: 7400000, guid: a1dd3b72a8c629040a2a4daabe35e2e6, type: 2}
   outAnimation: {fileID: 7400000, guid: a241cb222c887ad41a3c9cc0318057f5, type: 2}
+  winBackgroundColor: {r: 0.99607843, g: 0.3372549, b: 0.5647059, a: 1}
+  winTextColor: {r: 0.30980393, g: 0.08627451, b: 0.5019608, a: 1}
+  loseBackgroundColor: {r: 0.8509804, g: 0.8509804, b: 0.8509804, a: 1}
+  loseTextColor: {r: 0.30980393, g: 0.08627451, b: 0.5019608, a: 1}
 --- !u!111 &7710544491613026004
 Animation:
   m_ObjectHideFlags: 0
@@ -283,12 +288,12 @@ Animation:
   m_GameObject: {fileID: 7710544491613025998}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: a1dd3b72a8c629040a2a4daabe35e2e6, type: 2}
+  m_Animation: {fileID: 7400000, guid: a241cb222c887ad41a3c9cc0318057f5, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: a1dd3b72a8c629040a2a4daabe35e2e6, type: 2}
   - {fileID: 7400000, guid: a241cb222c887ad41a3c9cc0318057f5, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 0
+  m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!225 &7710544491613026007
@@ -328,7 +333,7 @@ RectTransform:
   m_GameObject: {fileID: 7710544491626112464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children:
   - {fileID: 7710544491750861115}
   - {fileID: 7710544490356022624}
@@ -340,7 +345,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7710544491692710314
 GameObject:

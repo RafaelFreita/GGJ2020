@@ -10,11 +10,17 @@ public class FeedbackScreen : MonoBehaviour
 	public EventBool onGameEnd;
 
 	public TextMeshProUGUI feedbackText;
+    public Image background;
 
 	public AnimationClip inAnimation;
 	public AnimationClip outAnimation;
 
-	private new Animation animation;
+    public Color winBackgroundColor;
+    public Color winTextColor;
+    public Color loseBackgroundColor;
+    public Color loseTextColor;
+
+    private new Animation animation;
 	private GameFlowController cachedGameFlow;
 
 	protected void Start()
@@ -32,7 +38,10 @@ public class FeedbackScreen : MonoBehaviour
 	public void OnGameEnd(bool state)
 	{
 		feedbackText.text = state ? "You win" : "You Lose";
-		animation.Play(inAnimation.name);
+        feedbackText.color = state ? winTextColor : loseTextColor;
+        background.color = state ? winBackgroundColor : loseBackgroundColor;
+
+        animation.Play(inAnimation.name);
 	}
 
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HammerMinigame : GameEndController
 {
@@ -16,7 +17,7 @@ public class HammerMinigame : GameEndController
     public GameObject objectPrefab;
     public GameObject linePrefab;
     public Transform objectSpawnLocation;
-    public Text headline;
+    public TextMeshProUGUI headline;
     public ParticleSystem hitzonePS;
 
     [Header("Hammer Sprites")]
