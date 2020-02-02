@@ -10,6 +10,7 @@ public class GameFlowController : Singleton<GameFlowController>
 	public EventBool onEndGame;
 
 
+	public SceneReference mainMenu;
 	public List<SceneReference> minigames;
 
 	public int currentScore = 0;
@@ -76,6 +77,7 @@ public class GameFlowController : Singleton<GameFlowController>
 		}
 	}
 
+
 	public void LoadNextMinigame()
 	{
 		if (currentLife <= 0) return;
@@ -84,10 +86,28 @@ public class GameFlowController : Singleton<GameFlowController>
 		SceneManager.LoadScene(minigames[lastMinigame].SceneToLoadName);
 	}
 
+	public void ContinueGame()
+	{
+		if(IsAlive())
+		{
+			LoadNextMinigame();
+		}
+		else
+		{
+			SceneManager.LoadScene(mainMenu.SceneToLoadName);
+		}
+	}
+
 	public void GiveScore(int newScore)
 	{
 		currentScore += newScore;
 		lastGivenScore = newScore;
+	}
+
+
+	public bool IsAlive()
+	{
+		return currentLife > 0;
 	}
 
 }

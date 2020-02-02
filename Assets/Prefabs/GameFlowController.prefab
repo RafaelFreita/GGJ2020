@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2751563323380719702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2751563323380719700}
+  - component: {fileID: 2751563323380719703}
+  m_Layer: 0
+  m_Name: GameFlowController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2751563323380719700
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2751563323380719702}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1087.6252, y: 477.05173, z: -244.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2751563323380719703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2751563323380719702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d8b3c704fddeea4ebfb8c3c3be7d8b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _persistent: 1
+  _destroyExistentObject: 1
+  onEndGame: {fileID: 11400000, guid: 5d8bb06eda852e642bf6952e2adde034, type: 2}
+  mainMenu:
+    scene: {fileID: 0}
+    sceneName: 
+  minigames:
+  - scene: {fileID: 102900000, guid: 2680fb83ba91cfa46856bf1181247dda, type: 3}
+    sceneName: Minigame1-Hold
+  - scene: {fileID: 102900000, guid: 0425367a5b3d3cf44a152183102789c6, type: 3}
+    sceneName: Minigame2-Balloons
+  - scene: {fileID: 102900000, guid: f5d9cf697d85d164b8d9eebd0c4e1eaa, type: 3}
+    sceneName: Minigame3-Hammer
+  currentScore: 0
+  lastGivenScore: 0
+  maxLife: 3
+  currentLife: 3
+  hasLostLife: 0

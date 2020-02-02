@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HoldBlowMinigame : GameEndController
 {
 
     public float blowHoldingTime = 5.0f;
 
-    public Text text;
+    public TextMeshProUGUI text;
 
     private float currentBlowingTime = 0f;
     private bool isBlowing = false;
@@ -37,7 +36,7 @@ public class HoldBlowMinigame : GameEndController
     {
         isBlowing = state;
 
-        if(!isBlowing && currentBlowingTime < blowHoldingTime)
+        if (!isBlowing && currentBlowingTime < blowHoldingTime)
         {
             OnLose();
         }

@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7025657761019760356}
-  - component: {fileID: 7025657761019760358}
   - component: {fileID: 7025657761019760357}
+  - component: {fileID: 2606385773524808662}
   m_Layer: 5
   m_Name: Feedback
   m_TagString: Untagged
@@ -39,20 +39,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7025657761019760358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7025657761019760355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c785a1c98d13ff4180991ee75da0776, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onGameEnd: {fileID: 11400000, guid: 5d8bb06eda852e642bf6952e2adde034, type: 2}
-  feedbackText: {fileID: 7025657762463125280}
 --- !u!114 &7025657761019760357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,6 +66,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &2606385773524808662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7025657761019760355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1afcc97eed45d146aad2f56bf79a1fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGameEnd: {fileID: 11400000, guid: 5d8bb06eda852e642bf6952e2adde034, type: 2}
+  feedbackText: {fileID: 7025657762463125280}
 --- !u!1 &7025657761733461713
 GameObject:
   m_ObjectHideFlags: 0
