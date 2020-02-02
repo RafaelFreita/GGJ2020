@@ -11,6 +11,10 @@ public class BaloonMinigame : GameEndController
 	public int balloonsToFill = 3;
 	public float maxMinigameTime = 10.0f;
 
+	// Ballon Image Refs
+	[SerializeField] Transform ballonRootBone;
+	[SerializeField] Transform ballonGrowBone;
+
 	public Text headerText;
 	public Color balloonNotReadyColor;
 	public Color balloonReadyColor;
@@ -51,11 +55,18 @@ public class BaloonMinigame : GameEndController
 			{
 				currentBlowingTime -= Time.deltaTime;
 			}
-			currentBlowingTime = Mathf.Clamp(currentBlowingTime, 0.0f, maxTimeFill);
+			currentBlowingTime = Mathf.Max(currentBlowingTime, 0.0f);
 
+			float blowSlider = currentBlowingTime / maxTimeFill;
+			if (blowSlider > 1.0f)
+			{
+				OnLose();
+			}
+			ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(blowSlider * 135) * 2, Vector3.forward);
+			ballonGrowBone.localScale = Vector3.one * (1.0f + blowSlider * 1.8f);
 			if (slider)
 			{
-				slider.value = currentBlowingTime / maxTimeFill;
+				slider.value = blowSlider;
 			}
 
 			if (sliderImage)
@@ -95,12 +106,6 @@ public class BaloonMinigame : GameEndController
 		if (isBlowing && !state)
 		{
 			CheckCurrentBalloon();
-		}
-
-		// If not blowing and starts blowing, start a new balloon
-		if (!isBlowing && state)
-		{
-			currentBlowingTime = 0f;
 		}
 
 		isBlowing = state;

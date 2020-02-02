@@ -17,6 +17,7 @@ public class HammerMinigame : GameEndController
     public GameObject linePrefab;
     public Transform objectSpawnLocation;
     public Text headline;
+    public ParticleSystem hitzonePS;
 
     [Header("Hammer Sprites")]
     public Image hammerImage;
@@ -47,6 +48,20 @@ public class HammerMinigame : GameEndController
 
         nextSpawnTimerx3 = nextSpawnTimer / 5f;
         spawnRatex3 = spawnRate / 5f;
+
+        WarmupRoller();
+    }
+
+    private void WarmupRoller()
+    {
+        Debug.Log(linePrefab.GetComponent<HammerObjectMovement>().speed);
+        int iterationsPerTimer = Mathf.CeilToInt(spawnRatex3 / Time.fixedDeltaTime);
+        for (int i = 0; i < 12; i++)
+        {
+            Vector3 offset = Vector3.down * linePrefab.GetComponent<HammerObjectMovement>().speed * Time.fixedDeltaTime * i * iterationsPerTimer;
+            Debug.Log(offset);
+            Instantiate(linePrefab, objectSpawnLocation.position + offset, Quaternion.identity, linesParent);
+        }
     }
 
     private void Update()
@@ -115,6 +130,7 @@ public class HammerMinigame : GameEndController
     {
         // Set hammer to hit position
         hammerImage.sprite = hammerDownSprite;
+        hitzonePS.Play();
 
         while (gameObjectsInHitzone.Count > 0)
         {
