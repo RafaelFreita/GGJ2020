@@ -6,14 +6,14 @@ using LUT.Events.Primitives;
 /// <summary>
 ///  This is actually base minigame controller
 /// </summary>
-abstract public class GameEndController : MonoBehaviour
+public abstract class GameEndController : MonoBehaviour
 {
 
     [SerializeField]
     private EventBool  onBlowStatusChanged = null;
     [SerializeField]
     private EventBool onGameEnd = null;
-    protected bool gameFinished = false;
+    protected bool isGamePaused = true;
 
     public List<string> tooltips;
     private GameFlowController cachedGameFlow;
@@ -22,6 +22,7 @@ abstract public class GameEndController : MonoBehaviour
     {
 		cachedGameFlow = GameFlowController.Instance;
         onBlowStatusChanged.Register(OnBlowStatusChange);
+        Countdown.Instantiate(3, "GO!", 1.0f, () => { isGamePaused = false; Debug.Log("GO!!!"); });
     }
 
     private void OnDestroy()
@@ -49,13 +50,13 @@ abstract public class GameEndController : MonoBehaviour
 
     public virtual void OnWin()
     {
-        gameFinished = true;
+        isGamePaused = true;
         cachedGameFlow.OnEndGame(true, GetScore(true));
         onGameEnd.Invoke(true);
     }
     public virtual void OnLose()
     {
-        gameFinished = true;
+        isGamePaused = true;
         cachedGameFlow.OnEndGame(false, GetScore(false));
         onGameEnd.Invoke(false);
     }

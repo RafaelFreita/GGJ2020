@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class HoldBlowMinigame : GameEndController
 {
@@ -9,8 +10,18 @@ public class HoldBlowMinigame : GameEndController
 
     public TextMeshProUGUI text;
 
+    public Animation explosionAnimation;
+    public AnimationClip explosionAnimClip;
+
+
+    public System.Collections.Generic.List<ParticleSystem> sparksSystems = new System.Collections.Generic.List<ParticleSystem>();
+
     private float currentBlowingTime = 0f;
     private bool isBlowing = false;
+
+    [SerializeField]
+    private float sparkSizeChangeSpeed = 1.0f;
+    private float sparksSizeMultiplier = 0.0f;
 
     new private void Start()
     {
@@ -21,8 +32,10 @@ public class HoldBlowMinigame : GameEndController
 
     private void Update()
     {
-        if (isBlowing && !gameFinished)
+        if (isBlowing && !isGamePaused)
         {
+            UpdateSparksPS();
+
             currentBlowingTime += Time.deltaTime;
             text.text = currentBlowingTime.ToString("F2");
             if (currentBlowingTime >= blowHoldingTime)
@@ -32,11 +45,21 @@ public class HoldBlowMinigame : GameEndController
         }
     }
 
+    private void UpdateSparksPS()
+    {
+        foreach (var p in sparksSystems)
+        {
+            var psMain = p.main;
+            psMain.startSizeMultiplier -= Time.deltaTime * sparkSizeChangeSpeed;
+            psMain.startSizeMultiplier = Mathf.Max(psMain.startSizeMultiplier, 1.0f);
+        }
+    }
+
     public override void OnBlowStatusChange(bool state)
     {
         isBlowing = state;
 
-        if (!gameFinished && !isBlowing && currentBlowingTime < blowHoldingTime)
+        if (!isGamePaused && !isBlowing && currentBlowingTime < blowHoldingTime)
         {
             OnLose();
         }
@@ -44,11 +67,18 @@ public class HoldBlowMinigame : GameEndController
 
     public override void OnLose()
     {
+        explosionAnimation.Play(explosionAnimClip.name);
+        StartCoroutine(WaitForExplosion());
         base.OnLose();
     }
 
     public override void OnWin()
     {
         base.OnWin();
+    }
+
+    private IEnumerator WaitForExplosion()
+    {
+        yield return new WaitForSeconds(explosionAnimClip.length);
     }
 }
