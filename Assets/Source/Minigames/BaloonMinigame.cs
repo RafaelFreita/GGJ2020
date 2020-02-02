@@ -30,7 +30,7 @@ public class BaloonMinigame : GameEndController
 
 	private bool isBlowing = false;
 
-	new private void Start()
+	private new void Start()
 	{
 		base.Start();
 
@@ -41,43 +41,45 @@ public class BaloonMinigame : GameEndController
 
 	private void Update()
 	{
-		if (!gameFinished)
+		if (isGamePaused)
 		{
-			totalMinigameTime += Time.deltaTime;
-			if (totalMinigameTime >= maxMinigameTime)
-			{
-				OnLose();
-			}
+			return;
+		}
 
-			if (isBlowing)
-			{
-				currentBlowingTime += Time.deltaTime;
-			}
-			else
-			{
-				currentBlowingTime -= Time.deltaTime;
-			}
-			currentBlowingTime = Mathf.Max(currentBlowingTime, 0.0f);
+		totalMinigameTime += Time.deltaTime;
+		if (totalMinigameTime >= maxMinigameTime)
+		{
+			OnLose();
+		}
 
-			float blowSlider = currentBlowingTime / maxTimeFill;
-			if (blowSlider > 1.0f)
-			{
-				currentBlowingTime = 0;
-				return;
-			}
-			ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(ballonShakingCurve.Evaluate(blowSlider) * 145) * 2, Vector3.forward);
-			ballonGrowBone.localScale = Vector3.one * (1.0f + ballonGrowingCurve.Evaluate(blowSlider) * 1.8f);
-			if (slider)
-			{
-				slider.value = blowSlider;
-			}
+		if (isBlowing)
+		{
+			currentBlowingTime += Time.deltaTime;
+		}
+		else
+		{
+			currentBlowingTime -= Time.deltaTime;
+		}
+		currentBlowingTime = Mathf.Max(currentBlowingTime, 0.0f);
 
-			if (sliderImage)
-			{
-				sliderImage.color = (IsBalloonReady())
-					? balloonReadyColor
-					: balloonNotReadyColor;
-			}
+		float blowSlider = currentBlowingTime / maxTimeFill;
+		if (blowSlider > 1.0f)
+		{
+			currentBlowingTime = 0;
+			return;
+		}
+		ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(ballonShakingCurve.Evaluate(blowSlider) * 145) * 2, Vector3.forward);
+		ballonGrowBone.localScale = Vector3.one * (1.0f + ballonGrowingCurve.Evaluate(blowSlider) * 1.8f);
+		if (slider)
+		{
+			slider.value = blowSlider;
+		}
+
+		if (sliderImage)
+		{
+			sliderImage.color = (IsBalloonReady())
+				? balloonReadyColor
+				: balloonNotReadyColor;
 		}
 	}
 

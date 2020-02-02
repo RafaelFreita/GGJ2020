@@ -67,7 +67,7 @@ public class HammerMinigame : GameEndController
 
     private void Update()
     {
-        if (!gameFinished)
+        if (!isGamePaused)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {

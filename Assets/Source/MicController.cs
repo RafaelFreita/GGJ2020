@@ -263,6 +263,11 @@ public class MicController : Singleton<MicController>
 		return Alpha * peakVolume + (1.0f - Alpha) * _lowPassResults;
 	}
 
+	public void StartCalibration()
+	{
+		StartCalibration(null);
+	}
+
 	public void StartCalibration(Action onCalibrationFinished = null)
 	{
 		// Reset Calibration frames
@@ -336,7 +341,10 @@ public class MicController : Singleton<MicController>
 	/// </summary>
 	public void StartBlowingCalibration_BTN()
 	{
-		StartCoroutine(BlowingCalibration(_dbValues));
+		Countdown.Instantiate(3, "BLOW!", 1.0f, () =>
+		{
+			StartCoroutine(BlowingCalibration(_dbValues));
+		});
 	}
 
 	private IEnumerator BlowingCalibration(List<float> record)

@@ -21,7 +21,7 @@ public class HoldBlowMinigame : GameEndController
 
     private void Update()
     {
-        if (isBlowing && !gameFinished)
+        if (isBlowing && !isGamePaused)
         {
             currentBlowingTime += Time.deltaTime;
             text.text = currentBlowingTime.ToString("F2");
@@ -36,7 +36,7 @@ public class HoldBlowMinigame : GameEndController
     {
         isBlowing = state;
 
-        if (!gameFinished && !isBlowing && currentBlowingTime < blowHoldingTime)
+        if (!isGamePaused && !isBlowing && currentBlowingTime < blowHoldingTime)
         {
             OnLose();
         }
