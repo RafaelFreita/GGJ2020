@@ -298,9 +298,9 @@ MonoBehaviour:
   tooltips:
   - Hit the wood with the hammer to fix the toys
   hitTimespan: 0.5
-  spawnRate: 2
+  spawnRate: 1.5
   objectsToSpawn: 6
-  minObjectsToHit: 4
+  minObjectsToHit: 6
   objectPrefab: {fileID: 4852176777593975345, guid: 3f31283885e491d429174e1f218e8d8d,
     type: 3}
   linePrefab: {fileID: 6129781366269236851, guid: 1d426b53d1409d2479b23ee2445d1c65,
@@ -5442,6 +5442,66 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4427613299862710599, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427613299862710599, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427613299862710599, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427613299862710599, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427613299862710599, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427613299862710599, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518968208057515387, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518968208057515387, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518968208057515387, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518968208057515387, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518968208057515387, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7518968208057515387, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7710544491613025994, guid: 62449dd9da042884fbfe61b1235b3cf1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5551,6 +5611,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FeedbackCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810959544199210046, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810959544199210046, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810959544199210046, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810959544199210046, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810959544199210046, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810959544199210046, guid: 62449dd9da042884fbfe61b1235b3cf1,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62449dd9da042884fbfe61b1235b3cf1, type: 3}
