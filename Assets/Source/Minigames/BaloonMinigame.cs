@@ -18,13 +18,17 @@ public class BaloonMinigame : GameEndController
     [SerializeField] Transform ballonGrowBone = null;
     [SerializeField] AnimationCurve ballonShakingCurve = null;
     [SerializeField] AnimationCurve ballonGrowingCurve = null;
-    
+
     public Color balloonNotReadyColor;
     public Color balloonReadyColor;
     public Text textBalloonsFilled;
     public Slider slider;
 
     [SerializeField] private TextMeshProUGUI balloonsCounter;
+
+    [SerializeField] private GameObject explosionObject;
+    [SerializeField] private float explosionDuration;
+
 
     private float totalMinigameTime = 0.0f;
     private float currentBlowingTime = 0f;
@@ -35,7 +39,7 @@ public class BaloonMinigame : GameEndController
     private new void Start()
     {
         base.Start();
-        
+
         ResetBalloon();
     }
 
@@ -45,7 +49,9 @@ public class BaloonMinigame : GameEndController
         {
             return;
         }
-        
+
+        isBlowing = Input.GetKey(KeyCode.Space);
+
         totalMinigameTime += Time.deltaTime;
         if (totalMinigameTime >= maxMinigameTime)
         {
@@ -66,7 +72,7 @@ public class BaloonMinigame : GameEndController
         if (blowSlider > 1.0f)
         {
             ResetBalloon();
-            // Animation of balloon flying
+            StartCoroutine(ExplodeBalloon());
             return;
         }
         ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(ballonShakingCurve.Evaluate(blowSlider) * 145) * 2, Vector3.forward);
@@ -99,14 +105,28 @@ public class BaloonMinigame : GameEndController
         {
             balloonsFilled++;
             balloonsCounter.text = balloonsFilled.ToString() + "/" + balloonsToFill.ToString();
-            ResetBalloon();
 
             // Check if all balloons were filled
             if (balloonsFilled >= balloonsToFill)
             {
                 OnWin();
             }
+            else
+            {
+                ResetBalloon();
+            }
         }
+    }
+
+    private IEnumerator ExplodeBalloon()
+    {
+        balloonSpriteRenderer.gameObject.SetActive(false);
+        explosionObject.SetActive(true);
+
+        yield return new WaitForSeconds(explosionDuration);
+
+        explosionObject.SetActive(false);
+        balloonSpriteRenderer.gameObject.SetActive(true);
     }
 
     public override void OnBlowStatusChange(bool state)
