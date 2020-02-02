@@ -44,12 +44,16 @@ public class MicController : Singleton<MicController>
 	[Header("Calibration")]
 	public bool AlreadyCalibrated = false;
 	public Action OnCalibrationFinishedCallback = null;
+	public Transform prefabCalibrationCanvas;
+	private Transform currentCalibrationCanvas;
+	[Header("Calibration | Ambient")]
 	// Ambient Calibration
 	public GameObject CalAmbientPanelPrefab = null;
 	private GameObject CalAmbientPanel = null;
 	public int CalAmbientLen = 0;
 	public float CalAmbientStdDev = 3;
 	public float CalAmbientLoudness = -30;
+	[Header("Calibration | Blowing")]
 	// Blowing Calibration
 	public GameObject CalBlowPanelPrefab = null;
 	private GameObject CalBlowPanel = null;
@@ -271,6 +275,14 @@ public class MicController : Singleton<MicController>
 		StartCalibration(null);
 	}
 
+	public Transform GetCalibrationCanvas()
+	{
+		if (currentCalibrationCanvas != null)
+			return currentCalibrationCanvas;
+		currentCalibrationCanvas = Instantiate(prefabCalibrationCanvas);
+		return currentCalibrationCanvas;
+	}
+
 	public void StartCalibration(Action onCalibrationFinished = null)
 	{
 		audioMixer.SetFloat(generalVolumeName, -80);
@@ -279,14 +291,14 @@ public class MicController : Singleton<MicController>
 		CalBlowLen = 0;
 		if (!CalAmbientPanel)
 		{
-			Transform canvasParent = FindObjectOfType<Canvas>().transform;
+			Transform canvasParent = GetCalibrationCanvas();
 			CalAmbientPanel = Instantiate(CalAmbientPanelPrefab, canvasParent);
 			CalAmbientPanel.GetComponentInChildren<Button>().onClick.AddListener(StartAmbientCalibration_BTN);
 			CalAmbientPanel.SetActive(false);
 		}
 		if (!CalBlowPanel)
 		{
-			Transform canvasParent = FindObjectOfType<Canvas>().transform;
+			Transform canvasParent = GetCalibrationCanvas();
 			CalBlowPanel = Instantiate(CalBlowPanelPrefab, canvasParent);
 			CalBlowPanel.GetComponentInChildren<Button>().onClick.AddListener(StartBlowingCalibration_BTN);
 			CalBlowPanel.SetActive(false);
