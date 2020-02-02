@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LUT;
 using UnityEngine;
@@ -37,14 +38,16 @@ public class MicController : Singleton<MicController>
 	// The alpha for the low pass filter (I don't really understand this).
 	public float Alpha = 0.05f;
 
-	private GameObject CalibrationCanvas = null;
-
+	[Header("Calibration")]
+	public bool AlreadyCalibrated = false;
+	public Action OnCalibrationFinishedCallback = null;
+	// Ambient Calibration
 	public GameObject CalAmbientPanelPrefab = null;
 	private GameObject CalAmbientPanel = null;
 	public int CalAmbientLen = 0;
 	public float CalAmbientStdDev = 3;
 	public float CalAmbientLoudness = -30;
-
+	// Blowing Calibration
 	public GameObject CalBlowPanelPrefab = null;
 	private GameObject CalBlowPanel = null;
 	public int CalBlowLen = 0;
@@ -72,15 +75,17 @@ public class MicController : Singleton<MicController>
 	private float _blowingTime;           // How long current blow is lasting lasting
 	private float _notBlowingTime;      // How long the user is not blowing
 
-	new private AudioSource audio;
+	private new AudioSource audio;
 
-	public void Awake()
+	public override void Awake()
 	{
+		base.Awake();
 		audio = GetComponent<AudioSource>();
 	}
 
-	public void Start()
+	public override void Start()
 	{
+		base.Start();
 		_samples = new float[SampleCount];
 		_spectrum = new float[SampleCount];
 		_dbValues = new List<float>();
@@ -120,7 +125,7 @@ public class MicController : Singleton<MicController>
 	private void StartMicListener()
 	{
 #if PLATFORM_ANDROID
-		while(!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+		while (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
 		{
 			Permission.RequestUserPermission(Permission.Microphone);
 		}
@@ -258,7 +263,7 @@ public class MicController : Singleton<MicController>
 		return Alpha * peakVolume + (1.0f - Alpha) * _lowPassResults;
 	}
 
-	public void StartCalibration()
+	public void StartCalibration(Action onCalibrationFinished = null)
 	{
 		// Reset Calibration frames
 		CalAmbientLen = 0;
@@ -278,6 +283,7 @@ public class MicController : Singleton<MicController>
 			CalBlowPanel.SetActive(false);
 		}
 
+		OnCalibrationFinishedCallback = onCalibrationFinished;
 		CalAmbientPanel.SetActive(true);
 	}
 
@@ -321,9 +327,7 @@ public class MicController : Singleton<MicController>
 								  $"AmbientLoudness: {CalAmbientLoudness.ToString("F2")}";
 		}
 
-		// TODO: Disable Ambient Calibration prefab
 		CalAmbientPanel.SetActive(false);
-		// TODO: Enable Blowing Calibration prefab
 		CalBlowPanel.SetActive(true);
 	}
 
@@ -364,11 +368,12 @@ public class MicController : Singleton<MicController>
 		if (CalibrationBlowText != null)
 		{
 			CalibrationBlowText.text = $"BlowStdDev: {CalBlowStdDev.ToString("F2")}\n" +
-			                           $"BlowLoudness: {CalBlowLoudness.ToString("F2")}";
+									   $"BlowLoudness: {CalBlowLoudness.ToString("F2")}";
 		}
-		
-		// TODO: Disable Blowing Calibration prefab
+
+		AlreadyCalibrated = true;
 		CalBlowPanel.SetActive(false);
+		OnCalibrationFinishedCallback?.Invoke();
 	}
 }
 

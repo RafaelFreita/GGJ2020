@@ -43,7 +43,14 @@ public class GameFlowController : Singleton<GameFlowController>
 		lastGivenScore = 0;
 		lastMinigame = -1;
 
-		LoadNextMinigame();
+		if (!MicController.Instance.AlreadyCalibrated)
+		{
+			MicController.Instance.StartCalibration(LoadNextMinigame);
+		}
+		else
+		{
+			LoadNextMinigame();
+		}
 	}
 
 	public void OnEndGame(bool value)
@@ -88,7 +95,7 @@ public class GameFlowController : Singleton<GameFlowController>
 
 	public void ContinueGame()
 	{
-		if(IsAlive())
+		if (IsAlive())
 		{
 			LoadNextMinigame();
 		}
