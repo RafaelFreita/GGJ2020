@@ -6,107 +6,113 @@ using UnityEngine.UI;
 public class BaloonMinigame : GameEndController
 {
 
-    public float minTimeFill = 2.0f;
-    public float maxTimeFill = 2.5f;
-    public int balloonsToFill = 3;
-    public float maxMinigameTime = 10.0f;
+	public float minTimeFill = 2.0f;
+	public float maxTimeFill = 2.5f;
+	public int balloonsToFill = 3;
+	public float maxMinigameTime = 10.0f;
 
-    public Text headerText;
-    public Color balloonNotReadyColor;
-    public Color balloonReadyColor;
-    public Text textBalloonsFilled;
-    public Slider slider;
-    private Image sliderImage;
+	public Text headerText;
+	public Color balloonNotReadyColor;
+	public Color balloonReadyColor;
+	public Text textBalloonsFilled;
+	public Slider slider;
+	private Image sliderImage;
 
-    private float totalMinigameTime = 0.0f;
-    private float currentBlowingTime = 0f;
-    private int balloonsFilled = 0;
-    
-    private bool isBlowing = false;
+	private float totalMinigameTime = 0.0f;
+	private float currentBlowingTime = 0f;
+	private int balloonsFilled = 0;
 
-    new private void Start()
-    {
-        base.Start();
+	private bool isBlowing = false;
 
-        headerText.text = $"Blow to fill ballons! SAVE THE PARTY!!!";
+	new private void Start()
+	{
+		base.Start();
 
-        sliderImage = slider.fillRect.GetComponent<Image>();
-    }
+		headerText.text = $"Blow to fill ballons! SAVE THE PARTY!!!";
 
-    private void Update()
-    {
-        if (!gameFinished)
-        {
-            totalMinigameTime += Time.deltaTime;
-            if (totalMinigameTime >= maxMinigameTime)
-            {
-                OnLose();
-            }
+		sliderImage = slider.fillRect.GetComponent<Image>();
+	}
 
-            if (isBlowing)
-            {
-                currentBlowingTime += Time.deltaTime;
-            }
-            else
-            {
-                currentBlowingTime -= Time.deltaTime;
-            }
-            currentBlowingTime = Mathf.Clamp(currentBlowingTime, 0.0f, maxTimeFill);
+	private void Update()
+	{
+		if (!gameFinished)
+		{
+			totalMinigameTime += Time.deltaTime;
+			if (totalMinigameTime >= maxMinigameTime)
+			{
+				OnLose();
+			}
 
-            slider.value = currentBlowingTime / maxTimeFill;
+			if (isBlowing)
+			{
+				currentBlowingTime += Time.deltaTime;
+			}
+			else
+			{
+				currentBlowingTime -= Time.deltaTime;
+			}
+			currentBlowingTime = Mathf.Clamp(currentBlowingTime, 0.0f, maxTimeFill);
 
-            sliderImage.color = (IsBalloonReady())
-                ? balloonReadyColor
-                : balloonNotReadyColor;
-        }
-    }
+			if (slider)
+			{
+				slider.value = currentBlowingTime / maxTimeFill;
+			}
 
-    private bool IsBalloonReady()
-    {
-        // If blowing time is between min and max
-        return currentBlowingTime >= minTimeFill && currentBlowingTime <= maxTimeFill;
-    }
+			if (sliderImage)
+			{
+				sliderImage.color = (IsBalloonReady())
+					? balloonReadyColor
+					: balloonNotReadyColor;
+			}
+		}
+	}
 
-    private void CheckCurrentBalloon()
-    {
-        if (IsBalloonReady())
-        {
-            balloonsFilled++;
-            textBalloonsFilled.text = balloonsFilled.ToString();
-            currentBlowingTime = 0.0f;
+	private bool IsBalloonReady()
+	{
+		// If blowing time is between min and max
+		return currentBlowingTime >= minTimeFill && currentBlowingTime <= maxTimeFill;
+	}
 
-            // Check if all balloons were filled
-            if (balloonsFilled >= balloonsToFill)
-            {
-                OnWin();
-            }
-        }
-    }
+	private void CheckCurrentBalloon()
+	{
+		if (IsBalloonReady())
+		{
+			balloonsFilled++;
+			textBalloonsFilled.text = balloonsFilled.ToString();
+			currentBlowingTime = 0.0f;
 
-    public override void OnBlowStatusChange(bool state)
-    {
-        // If is blowing and stops, check if balloon is filled
-        if (isBlowing && !state)
-        {
-            CheckCurrentBalloon();
-        }
+			// Check if all balloons were filled
+			if (balloonsFilled >= balloonsToFill)
+			{
+				OnWin();
+			}
+		}
+	}
 
-        // If not blowing and starts blowing, start a new balloon
-        if (!isBlowing && state)
-        {
-            currentBlowingTime = 0f;
-        }
+	public override void OnBlowStatusChange(bool state)
+	{
+		// If is blowing and stops, check if balloon is filled
+		if (isBlowing && !state)
+		{
+			CheckCurrentBalloon();
+		}
 
-        isBlowing = state;
-    }
+		// If not blowing and starts blowing, start a new balloon
+		if (!isBlowing && state)
+		{
+			currentBlowingTime = 0f;
+		}
 
-    public override void OnLose()
-    {
-        base.OnLose();
-    }
+		isBlowing = state;
+	}
 
-    public override void OnWin()
-    {
-        base.OnWin();
-    }
+	public override void OnLose()
+	{
+		base.OnLose();
+	}
+
+	public override void OnWin()
+	{
+		base.OnWin();
+	}
 }
