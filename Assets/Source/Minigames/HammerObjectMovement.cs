@@ -8,8 +8,8 @@ public class HammerObjectMovement : MonoBehaviour
     public float speed = 5.0f;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.position += Vector3.down * speed * Time.deltaTime;
+        transform.position += Vector3.down * speed * Time.fixedDeltaTime;
     }
 }
