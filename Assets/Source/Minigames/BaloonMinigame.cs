@@ -35,6 +35,8 @@ public class BaloonMinigame : GameEndController
     private int balloonsFilled = 0;
 
     private bool isBlowing = false;
+    private Color currentColor;
+    private Color currentReadyColor;
 
     private new void Start()
     {
@@ -61,6 +63,7 @@ public class BaloonMinigame : GameEndController
             OnLose();
         }
 
+        isBlowing = Input.GetKey(KeyCode.Space);
 
         if (isBlowing)
         {
@@ -86,9 +89,9 @@ public class BaloonMinigame : GameEndController
             slider.value = blowSlider;
         }
 
-        //sliderImage.color = (IsBalloonReady())
-        //    ? balloonReadyColor
-        //    : balloonNotReadyColor;
+        balloonSpriteRenderer.color = (IsBalloonReady())
+            ? currentReadyColor
+            : currentColor;
     }
 
     private bool IsBalloonReady()
@@ -100,7 +103,12 @@ public class BaloonMinigame : GameEndController
     private void ResetBalloon()
     {
         currentBlowingTime = 0.0f;
-        balloonSpriteRenderer.color = Random.ColorHSV(0f, 1f, .6f, .8f, .7f, .9f);
+        currentColor = Random.ColorHSV(0f, 1f, .6f, .8f, .4f, .5f);
+
+        float h, s, v;
+        Color.RGBToHSV(currentColor, out h, out s, out v);
+
+        currentReadyColor = Color.HSVToRGB(h, s, 1f);
     }
 
     private void CheckCurrentBalloon()
