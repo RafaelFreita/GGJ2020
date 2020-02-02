@@ -54,7 +54,7 @@ public class HammerMinigame : GameEndController
 
     private void GetNextSpawnTime()
     {
-        timeToNextSpawn = spawnRate + Random.Range(-spawnRate*0.5f, spawnRate*1.5f);
+        timeToNextSpawn = spawnRate + Random.Range(-spawnRate * 0.5f, spawnRate * 1.5f);
     }
 
     private void WarmupRoller()
@@ -70,7 +70,7 @@ public class HammerMinigame : GameEndController
 
     private void Update()
     {
-        if (!isGamePaused)
+        if (!isGamePaused || IsCoutdownAlive())
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -107,6 +107,11 @@ public class HammerMinigame : GameEndController
         }
     }
 
+    private bool IsCoutdownAlive()
+    {
+        return FindObjectOfType<Countdown>() != null;
+    }
+
     private void CheckGameEnded()
     {
         if ((objectsHit + objectsMissed) == objectsToSpawn)
@@ -124,14 +129,22 @@ public class HammerMinigame : GameEndController
 
     private void SpawnObject()
     {
+        if (IsCoutdownAlive())
+        {
+            return;
+        }
+
         Instantiate(objectPrefab, objectSpawnLocation.position, Quaternion.identity, objectSpawnLocation);
+
         GetNextSpawnTime();
         nextSpawnTimer = 0.0f;
         objectsSpawned++;
+
     }
 
     private void HitHammer()
     {
+        if (isGamePaused) return;
         // Set hammer to hit position
         hammerImage.sprite = hammerDownSprite;
         hitzonePS.Play();
@@ -150,6 +163,7 @@ public class HammerMinigame : GameEndController
 
     private void LiftHammer()
     {
+        if (isGamePaused) return;
         // Set hammer back lifted
         hammerImage.sprite = hammerUpSprite;
     }

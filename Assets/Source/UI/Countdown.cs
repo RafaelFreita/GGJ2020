@@ -73,7 +73,7 @@ public class Countdown : MonoBehaviour
 			return;
 		}
 
-		if (count > -1.0f)
+		if (countFlt > (0.5f*scale))
 		{
 			countDownText.text = finalMsg;
 			return;

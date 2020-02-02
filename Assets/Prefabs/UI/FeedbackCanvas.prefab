@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8810959544199210046}
   - component: {fileID: 1191418236696088100}
   - component: {fileID: 2680597246910857586}
+  - component: {fileID: 895366928320213884}
   m_Layer: 5
   m_Name: 3
   m_TagString: Untagged
@@ -73,6 +74,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &895366928320213884
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962780487554932991}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: bbeb935b24df9f6478b5abffd93ea915, type: 2}
+  - {fileID: 7400000, guid: 8a727c0bc6b39be45b7bbc355f0a5235, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &2857885615024029525
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,6 +544,7 @@ GameObject:
   - component: {fileID: 7518968208057515387}
   - component: {fileID: 3459476938996459754}
   - component: {fileID: 4941246080826702381}
+  - component: {fileID: 301622443962813555}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -588,6 +607,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &301622443962813555
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5183978103022971120}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: bbeb935b24df9f6478b5abffd93ea915, type: 2}
+  - {fileID: 7400000, guid: 8a727c0bc6b39be45b7bbc355f0a5235, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &5297800162320559873
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,6 +741,8 @@ MonoBehaviour:
   onGameEnd: {fileID: 11400000, guid: 5d8bb06eda852e642bf6952e2adde034, type: 2}
   happyLung: {fileID: 21300000, guid: 4bf81e2a04064814495a0e737e3ba944, type: 3}
   sadLung: {fileID: 21300000, guid: acf6e20822715e54aadb90842f6901ea, type: 3}
+  happyLungAnimClip: {fileID: 7400000, guid: bbeb935b24df9f6478b5abffd93ea915, type: 2}
+  sadLungAnimClip: {fileID: 7400000, guid: 8a727c0bc6b39be45b7bbc355f0a5235, type: 2}
 --- !u!1 &5646315267589698568
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +910,7 @@ GameObject:
   - component: {fileID: 4427613299862710599}
   - component: {fileID: 5810437559440368712}
   - component: {fileID: 5552487696972691539}
+  - component: {fileID: 5960936700649748493}
   m_Layer: 5
   m_Name: 2
   m_TagString: Untagged
@@ -934,6 +973,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &5960936700649748493
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6336105796826034633}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: bbeb935b24df9f6478b5abffd93ea915, type: 2}
+  - {fileID: 7400000, guid: 8a727c0bc6b39be45b7bbc355f0a5235, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &7710544490356022625
 GameObject:
   m_ObjectHideFlags: 0
