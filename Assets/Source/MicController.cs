@@ -5,6 +5,7 @@ using LUT;
 using UnityEngine;
 using UnityEngine.UI;
 using LUT.Events.Primitives;
+using UnityEngine.Audio;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
 #endif
@@ -20,6 +21,8 @@ public class MicController : Singleton<MicController>
 
 	[Header("Setup")]
 	public EventBool OnBlowStatusChanged;
+	public string generalVolumeName = "GeneralVolume";
+	public AudioMixer audioMixer;
 
 	[Header("Mic Rec Info")]
 	/// How many previous frames of sound are analyzed.
@@ -270,6 +273,7 @@ public class MicController : Singleton<MicController>
 
 	public void StartCalibration(Action onCalibrationFinished = null)
 	{
+		audioMixer.SetFloat(generalVolumeName, -80);
 		// Reset Calibration frames
 		CalAmbientLen = 0;
 		CalBlowLen = 0;
@@ -382,6 +386,7 @@ public class MicController : Singleton<MicController>
 		AlreadyCalibrated = true;
 		CalBlowPanel.SetActive(false);
 		OnCalibrationFinishedCallback?.Invoke();
+		audioMixer.SetFloat(generalVolumeName, 0);
 	}
 }
 

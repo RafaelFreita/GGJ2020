@@ -52,6 +52,8 @@ MonoBehaviour:
   CalibrationBlowText: {fileID: 0}
   OnBlowStatusChanged: {fileID: 11400000, guid: 6a4b3db70fe263844aaf9ecff2d19c4e,
     type: 2}
+  generalVolumeName: GeneralVolume
+  audioMixer: {fileID: 24100000, guid: a174a9df9bf120b40a6d81475826b274, type: 2}
   SampleCount: 1024
   Frequency: 48000
   RecordAudioLength: 10

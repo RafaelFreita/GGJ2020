@@ -61,6 +61,7 @@ public class BaloonMinigame : GameEndController
             OnLose();
         }
 
+
         if (isBlowing)
         {
             currentBlowingTime += Time.deltaTime;
