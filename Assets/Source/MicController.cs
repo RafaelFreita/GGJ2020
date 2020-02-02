@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using LUT;
 using UnityEngine;
 using UnityEngine.UI;
 using LUT.Events.Primitives;
@@ -7,11 +9,13 @@ using UnityEngine.Android;
 #endif
 
 [RequireComponent(typeof(AudioSource))]
-public class MicController : MonoBehaviour
+public class MicController : Singleton<MicController>
 {
 	[Header("Debug")]
 	public Text resultDisplay;
 	public Text blowDisplay;
+	public Text CalibrationAmbientText;
+	public Text CalibrationBlowText = null;
 
 	[Header("Setup")]
 	public EventBool OnBlowStatusChanged;
@@ -33,29 +37,19 @@ public class MicController : MonoBehaviour
 	// The alpha for the low pass filter (I don't really understand this).
 	public float Alpha = 0.05f;
 
-	public bool calibratingAmbient = false;
-	public bool CalibratingAmbient
-	{
-		get { return calibratingAmbient; }
-		set { calibratingAmbient = value; }
-	}
+	private GameObject CalibrationCanvas = null;
+
+	public GameObject CalAmbientPanelPrefab = null;
+	private GameObject CalAmbientPanel = null;
 	public int CalAmbientLen = 0;
 	public float CalAmbientStdDev = 3;
 	public float CalAmbientLoudness = -30;
-	[SerializeField]
-	private Text CalAmbientText;
 
-	public bool calibratingBlow = false;
-	public bool CalibratingBlow
-	{
-		get { return calibratingBlow; }
-		set { calibratingBlow = value; }
-	}
+	public GameObject CalBlowPanelPrefab = null;
+	private GameObject CalBlowPanel = null;
 	public int CalBlowLen = 0;
 	public float CalBlowStdDev = 0;
 	public float CalBlowLoudness = 0;
-	[SerializeField]
-	private Text CalBlowText = null;
 
 	/// How long a blow must last to be classified as a blow (and not a sigh for instance). (in seconds)
 	public float RequiredTimeToStartBlowing = 0.25f;
@@ -202,15 +196,6 @@ public class MicController : MonoBehaviour
 	{
 
 		UpdateRecords(_dbValue, _dbValues);
-		//UpdateRecords(pitchValue, pitchValues);
-
-		// Find the average pitch in our records (used to decipher against whistles, clicks, etc).
-		//float sumPitch = 0;
-		//foreach (float num in pitchValues)
-		//{
-		//	sumPitch += num;
-		//}
-		//float avgPitch = sumPitch / pitchValues.Count;
 
 		// Run our low pass filter.
 		_lowPassResults = LowPassFilter(_dbValue);
@@ -263,73 +248,6 @@ public class MicController : MonoBehaviour
 			record.RemoveAt(0);
 		}
 		record.Add(val);
-		if (calibratingAmbient)
-		{
-			if (CalAmbientLen < RecordedLength)
-			{
-				CalAmbientLen++;
-			}
-			else
-			{
-				float mean = 0;
-				foreach (float db in record)
-				{
-					mean += db;
-				}
-				mean /= record.Count;
-
-				float stddev = 0;
-				foreach (float db in record)
-				{
-					stddev += Mathf.Pow(db - mean, 2.0f);
-				}
-				stddev /= record.Count;
-				stddev = Mathf.Sqrt(stddev);
-				CalAmbientStdDev = stddev;
-				CalAmbientLoudness = mean;
-				if (CalAmbientText != null)
-				{
-					CalAmbientText.text = $"AmbientStdDev: {CalAmbientStdDev.ToString("F2")}\n" +
-										$"AmbientLoudness: {CalAmbientLoudness.ToString("F2")}";
-				}
-				calibratingAmbient = false;
-				CalAmbientLen = 0;
-			}
-		}
-
-		if (calibratingBlow)
-		{
-			if (CalBlowLen < RecordedLength)
-			{
-				CalBlowLen++;
-			}
-			else
-			{
-				float mean = 0;
-				foreach (float db in record)
-				{
-					mean += db;
-				}
-				mean /= record.Count;
-
-				float stddev = 0;
-				foreach (float db in record)
-				{
-					stddev += Mathf.Pow(db - mean, 2.0f);
-				}
-				stddev /= record.Count;
-				stddev = Mathf.Sqrt(stddev);
-				CalBlowStdDev = stddev;
-				CalBlowLoudness = mean;
-				if (CalBlowText != null)
-				{
-					CalBlowText.text = $"BlowStdDev: {CalBlowStdDev.ToString("F2")}\n" +
-					                   $"BlowLoudness: {CalBlowLoudness.ToString("F2")}";
-				}
-				calibratingBlow = false;
-				CalBlowLen = 0;
-			}
-		}
 	}
 
 	// !! this is not a low pass filter, actually it's more like a damping
@@ -338,6 +256,119 @@ public class MicController : MonoBehaviour
 	private float LowPassFilter(float peakVolume)
 	{
 		return Alpha * peakVolume + (1.0f - Alpha) * _lowPassResults;
+	}
+
+	public void StartCalibration()
+	{
+		// Reset Calibration frames
+		CalAmbientLen = 0;
+		CalBlowLen = 0;
+		if (!CalAmbientPanel)
+		{
+			Transform canvasParent = FindObjectOfType<Canvas>().transform;
+			CalAmbientPanel = Instantiate(CalAmbientPanelPrefab, canvasParent);
+			CalAmbientPanel.GetComponentInChildren<Button>().onClick.AddListener(StartAmbientCalibration_BTN);
+			CalAmbientPanel.SetActive(false);
+		}
+		if (!CalBlowPanel)
+		{
+			Transform canvasParent = FindObjectOfType<Canvas>().transform;
+			CalBlowPanel = Instantiate(CalBlowPanelPrefab, canvasParent);
+			CalBlowPanel.GetComponentInChildren<Button>().onClick.AddListener(StartBlowingCalibration_BTN);
+			CalBlowPanel.SetActive(false);
+		}
+
+		CalAmbientPanel.SetActive(true);
+	}
+
+	/// <summary>
+	/// Callback for ambient calibration button.
+	/// </summary>
+	public void StartAmbientCalibration_BTN()
+	{
+		StartCoroutine(AmbientCalibration(_dbValues));
+	}
+
+	private IEnumerator AmbientCalibration(List<float> record)
+	{
+		//Wait until getting all necessary frames
+		while (CalAmbientLen < RecordedLength)
+		{
+			// TODO: Update progress bar
+			CalAmbientLen++;
+			yield return null;
+		}
+
+		float mean = 0;
+		foreach (float db in record)
+		{
+			mean += db;
+		}
+		mean /= record.Count;
+
+		float stddev = 0;
+		foreach (float db in record)
+		{
+			stddev += Mathf.Pow(db - mean, 2.0f);
+		}
+		stddev /= record.Count;
+		stddev = Mathf.Sqrt(stddev);
+		CalAmbientStdDev = stddev;
+		CalAmbientLoudness = mean;
+		if (CalibrationAmbientText != null)
+		{
+			CalibrationAmbientText.text = $"AmbientStdDev: {CalAmbientStdDev.ToString("F2")}\n" +
+								  $"AmbientLoudness: {CalAmbientLoudness.ToString("F2")}";
+		}
+
+		// TODO: Disable Ambient Calibration prefab
+		CalAmbientPanel.SetActive(false);
+		// TODO: Enable Blowing Calibration prefab
+		CalBlowPanel.SetActive(true);
+	}
+
+	/// <summary>
+	/// Callback for blowing calibration button.
+	/// </summary>
+	public void StartBlowingCalibration_BTN()
+	{
+		StartCoroutine(BlowingCalibration(_dbValues));
+	}
+
+	private IEnumerator BlowingCalibration(List<float> record)
+	{
+		//Wait until getting all necessary frames
+		while (CalBlowLen < RecordedLength)
+		{
+			// Update progress bar
+			CalBlowLen++;
+			yield return null;
+		}
+
+		float mean = 0;
+		foreach (float db in record)
+		{
+			mean += db;
+		}
+		mean /= record.Count;
+
+		float stddev = 0;
+		foreach (float db in record)
+		{
+			stddev += Mathf.Pow(db - mean, 2.0f);
+		}
+		stddev /= record.Count;
+		stddev = Mathf.Sqrt(stddev);
+		CalBlowStdDev = stddev;
+		CalBlowLoudness = mean;
+		if (CalibrationBlowText != null)
+		{
+			CalibrationBlowText.text = $"BlowStdDev: {CalBlowStdDev.ToString("F2")}\n" +
+			                           $"BlowLoudness: {CalBlowLoudness.ToString("F2")}";
+		}
+		
+		// TODO: Disable Blowing Calibration prefab
+		CalBlowPanel.SetActive(false);
 	}
 }
 
