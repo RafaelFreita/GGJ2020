@@ -16,9 +16,11 @@ abstract public class GameEndController : MonoBehaviour
     protected bool gameFinished = false;
 
     public List<string> tooltips;
+    private GameFlowController cachedGameFlow;
 
     protected void Start()
     {
+		cachedGameFlow = GameFlowController.Instance;
         onBlowStatusChanged.Register(OnBlowStatusChange);
     }
 
@@ -40,14 +42,21 @@ abstract public class GameEndController : MonoBehaviour
 
     public abstract void OnBlowStatusChange(bool state);
 
+    protected virtual int GetScore(bool win)
+    {
+        return win ? Random.Range(80, 100) : 0;
+    }
+
     public virtual void OnWin()
     {
         gameFinished = true;
+        cachedGameFlow.OnEndGame(true, GetScore(true));
         onGameEnd.Invoke(true);
     }
     public virtual void OnLose()
     {
         gameFinished = true;
+        cachedGameFlow.OnEndGame(false, GetScore(false));
         onGameEnd.Invoke(false);
     }
 }

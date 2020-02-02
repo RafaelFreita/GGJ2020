@@ -2,14 +2,10 @@
 using UnityEngine;
 using LUT;
 using UnityEngine.SceneManagement;
-using LUT.Events.Primitives;
 using LUT.Snippets;
 
 public class GameFlowController : Singleton<GameFlowController>
 {
-	public EventBool onEndGame;
-
-
 	public SceneReference mainMenu;
 	public List<SceneReference> minigames;
 
@@ -20,20 +16,17 @@ public class GameFlowController : Singleton<GameFlowController>
 	public int currentLife = 3;
 	public bool hasLostLife = false;
 
-
+	[SerializeField]
 	private int lastMinigame = -1;
+
+	public override void Awake()
+	{
+		base.Awake();
+	}
 
 	public override void Start()
 	{
 		base.Start();
-		onEndGame.Register(OnEndGame);
-	}
-
-	public void OnDestroy()
-	{
-		//❤❤❤❤❤❤❤😍😍😍😍😍🤳🤳🤳🤳
-		onEndGame.Unregister(OnEndGame);
-
 	}
 
 	public void StartGame()
@@ -53,13 +46,15 @@ public class GameFlowController : Singleton<GameFlowController>
 		}
 	}
 
-	public void OnEndGame(bool value)
+	public void OnEndGame(bool value, int score)
 	{
+		Debug.Log($"OnEndGame {value}, {score}");
 		hasLostLife = !value;
 		if (!value)
 		{
 			currentLife -= 1;
 		}
+		GiveScore(score);
 	}
 
 	private int GetNextMinigame()

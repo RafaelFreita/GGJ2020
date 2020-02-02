@@ -14,7 +14,7 @@ public class LungFeedback : MonoBehaviour
 	private Image[] lungs;
 	
 	private GameFlowController cachedGameFlow;
-	void Awake()
+	private void Awake()
 	{
 		onGameEnd.Register(OnGameEnd);
 		cachedGameFlow = GameFlowController.Instance;
@@ -28,7 +28,6 @@ public class LungFeedback : MonoBehaviour
 
 	public void OnGameEnd(bool won)
 	{
-		Debug.Log($"has {lungs.Length} lungs and {cachedGameFlow.currentLife} life");
 		for(int i = 0; i < lungs.Length; i++)
 		{
 			if(cachedGameFlow.currentLife > i)

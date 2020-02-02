@@ -36,7 +36,7 @@ public class HoldBlowMinigame : GameEndController
     {
         isBlowing = state;
 
-        if (!isBlowing && currentBlowingTime < blowHoldingTime)
+        if (!gameFinished && !isBlowing && currentBlowingTime < blowHoldingTime)
         {
             OnLose();
         }
