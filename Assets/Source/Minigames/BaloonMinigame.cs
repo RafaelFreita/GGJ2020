@@ -14,6 +14,8 @@ public class BaloonMinigame : GameEndController
 	// Ballon Image Refs
 	[SerializeField] Transform ballonRootBone;
 	[SerializeField] Transform ballonGrowBone;
+	[SerializeField] AnimationCurve ballonShakingCurve;
+	[SerializeField] AnimationCurve ballonGrowingCurve;
 
 	public Text headerText;
 	public Color balloonNotReadyColor;
@@ -60,10 +62,11 @@ public class BaloonMinigame : GameEndController
 			float blowSlider = currentBlowingTime / maxTimeFill;
 			if (blowSlider > 1.0f)
 			{
-				OnLose();
+				currentBlowingTime = 0;
+				return;
 			}
-			ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(blowSlider * 135) * 2, Vector3.forward);
-			ballonGrowBone.localScale = Vector3.one * (1.0f + blowSlider * 1.8f);
+			ballonRootBone.rotation = Quaternion.AngleAxis(90 + Mathf.Sin(ballonShakingCurve.Evaluate(blowSlider) * 145) * 2, Vector3.forward);
+			ballonGrowBone.localScale = Vector3.one * (1.0f + ballonGrowingCurve.Evaluate(blowSlider) * 1.8f);
 			if (slider)
 			{
 				slider.value = blowSlider;

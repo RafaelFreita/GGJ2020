@@ -309,6 +309,99 @@ MonoBehaviour:
   maxMinigameTime: 15
   ballonRootBone: {fileID: 1236757998}
   ballonGrowBone: {fileID: 1027009909}
+  ballonShakingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.083723865
+      value: 0.20461231
+      inSlope: 1.2986646
+      outSlope: 1.2986646
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.28426647
+      value: 0.41839457
+      inSlope: 0.8789672
+      outSlope: 0.8789672
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4756729
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.67210275
+      value: 0.7723202
+      inSlope: 0.93982136
+      outSlope: 0.93982136
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13508996
+      outWeight: 0.2864736
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  ballonGrowingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.41198954
+      value: 0.15686929
+      inSlope: 1.2938455
+      outSlope: 1.2938455
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.18171775
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.78308934
+      value: 0.8272799
+      inSlope: 1.9523598
+      outSlope: 1.9523598
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   headerText: {fileID: 288134262}
   balloonNotReadyColor: {r: 0.8773585, g: 0.120016046, b: 0.120016046, a: 1}
   balloonReadyColor: {r: 0.089711644, g: 0.9056604, b: 0.14770731, a: 1}
