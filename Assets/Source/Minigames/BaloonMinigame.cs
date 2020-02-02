@@ -104,6 +104,8 @@ public class BaloonMinigame : GameEndController
 
     private void CheckCurrentBalloon()
     {
+        if (isGamePaused) return;
+
         if (IsBalloonReady())
         {
             balloonsFilled++;
