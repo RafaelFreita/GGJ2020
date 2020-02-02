@@ -52,7 +52,9 @@ public class HammerMinigame : GameEndController
 	{
 		base.Start();
 
-		nextSpawnTimerx3 = nextSpawnTimer / 5f;
+        objectsToSpawn += GameFlowController.Instance.gameIterations * 2;
+
+        nextSpawnTimerx3 = nextSpawnTimer / 5f;
 		spawnRatex3 = spawnRate / 5f;
 
 		for (int i = 0; i < maxErrors; i++)

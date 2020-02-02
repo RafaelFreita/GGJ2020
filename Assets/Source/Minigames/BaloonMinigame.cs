@@ -40,6 +40,11 @@ public class BaloonMinigame : GameEndController
     {
         base.Start();
 
+        balloonsToFill += GameFlowController.Instance.gameIterations / 2;
+        maxMinigameTime += (GameFlowController.Instance.gameIterations / 2) * 3.0f;
+
+        balloonsCounter.text = balloonsFilled.ToString() + "/" + balloonsToFill.ToString();
+
         ResetBalloon();
     }
 
@@ -49,8 +54,6 @@ public class BaloonMinigame : GameEndController
         {
             return;
         }
-
-        isBlowing = Input.GetKey(KeyCode.Space);
 
         totalMinigameTime += Time.deltaTime;
         if (totalMinigameTime >= maxMinigameTime)

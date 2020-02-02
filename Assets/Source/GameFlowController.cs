@@ -19,6 +19,8 @@ public class GameFlowController : Singleton<GameFlowController>
 	[SerializeField]
 	private int lastMinigame = -1;
 
+    public int gameIterations = 0;
+
 	public override void Awake()
 	{
 		base.Awake();
@@ -35,6 +37,7 @@ public class GameFlowController : Singleton<GameFlowController>
 		currentScore = 0;
 		previousScore = 0;
 		lastMinigame = -1;
+        gameIterations = 0;
 
 		if (!MicController.Instance.AlreadyCalibrated)
 		{
@@ -55,6 +58,7 @@ public class GameFlowController : Singleton<GameFlowController>
 			currentLife -= 1;
 		}
 		GiveScore(score);
+        gameIterations++;
 	}
 
 	private int GetNextMinigame()

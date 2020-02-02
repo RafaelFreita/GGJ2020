@@ -26,6 +26,8 @@ public class HoldBlowMinigame : GameEndController
     new private void Start()
     {
         base.Start();
+
+        blowHoldingTime += GameFlowController.Instance.gameIterations / 2;
     }
 
     private void Update()
